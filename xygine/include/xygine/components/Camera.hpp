@@ -58,7 +58,7 @@ namespace xy
         const Camera& operator = (const Camera&) = delete;
 
         Component::Type type() const override { return Component::Type::Script; }
-        void entityUpdate(Entity&, float) override;
+        void entityUpdate(float) override;
 
         enum class TransformLock
         {

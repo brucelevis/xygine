@@ -44,7 +44,7 @@ namespace NetDemo
         ~PlayerController() = default;
 
         xy::Component::Type type() const override { return xy::Component::Type::Script; }
-        void entityUpdate(xy::Entity&, float) override;
+        void entityUpdate(float) override;
         void onStart(xy::Entity&) override;
 
         void setInput(const Input&, bool = true);

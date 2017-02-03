@@ -69,8 +69,11 @@ TileMapLayer::TileMapLayer(MessageBus& mb, const tmx::Map::Key&, const sf::Vecto
 }
 
 //public
-void TileMapLayer::entityUpdate(Entity& entity, float)
+void TileMapLayer::entityUpdate(float)
 {
+    XY_ASSERT(getEntity(), "entity null");
+    Entity& entity = *getEntity();
+
     auto scene = entity.getScene();
     XY_ASSERT(scene, "why you been updated without scene??");
 

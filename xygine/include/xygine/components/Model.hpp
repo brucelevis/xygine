@@ -75,7 +75,7 @@ namespace xy
         ~Model() = default;
 
         Component::Type type() const override { return Component::Type::Mesh; }
-        void entityUpdate(Entity&, float) override;
+        void entityUpdate(float) override;
         /*!
         \brief Returns the 2D globally transformed AABB of the model based
         on the 3D AABB of the model's mesh.

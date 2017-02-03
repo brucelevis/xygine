@@ -171,7 +171,7 @@ void Entity::update(float dt)
     //allow entity / components to update each other
     for (auto& c : m_components)
     {
-        c->entityUpdate(*this, dt);
+        c->entityUpdate(dt);
     }
 
     //copy any new components we may have aquired via update

@@ -66,7 +66,7 @@ namespace xy
 
         Component::Type type() const override { return Component::Type::Script; }
 
-        void entityUpdate(Entity&, float) override;
+        void entityUpdate(float) override;
         void destroy() override;
         /*!
         \brief Sets the sound to be played by this sound source.

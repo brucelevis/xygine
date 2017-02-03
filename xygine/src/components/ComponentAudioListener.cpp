@@ -64,8 +64,11 @@ AudioListener::~AudioListener()
 }
 
 //public
-void AudioListener::entityUpdate(Entity& entity, float)
+void AudioListener::entityUpdate(float)
 {
+    XY_ASSERT(getEntity(), "entity null");
+    Entity& entity = *getEntity();
+
     auto pos = entity.getWorldPosition();
     sf::Listener::setPosition({ pos.x, -pos.y, listenerDepth });
 

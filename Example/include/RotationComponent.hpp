@@ -38,9 +38,9 @@ public:
     ~RotationComponent() = default;
 
     xy::Component::Type type() const override { return xy::Component::Type::Script; }
-    void entityUpdate(xy::Entity& entity, float dt)
+    void entityUpdate(float dt)
     {
-        entity.rotate(90.f * dt);
+        getEntity()->rotate(90.f * dt);
     }
 };
 

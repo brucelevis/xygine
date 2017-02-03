@@ -79,8 +79,10 @@ MeshDrawable::MeshDrawable(MessageBus& mb, MeshRenderer& mr, const MeshRenderer:
 }
 
 //public
-void MeshDrawable::entityUpdate(Entity& e, float)
+void MeshDrawable::entityUpdate(float)
 {
+    XY_ASSERT(getEntity(), "entity null");
+    Entity& e = *getEntity();
     m_sprite.setPosition(e.getScene()->getView().getCenter());
 }
 

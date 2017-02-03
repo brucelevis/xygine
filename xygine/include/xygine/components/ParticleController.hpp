@@ -68,7 +68,7 @@ namespace xy
         ~ParticleController() = default;
 
         Component::Type type() const override;
-        void entityUpdate(Entity&, float) override;
+        void entityUpdate(float) override;
         void onStart(Entity&);
 
         /*!
@@ -100,7 +100,6 @@ namespace xy
 
     private:
 
-        Entity* m_entity;
         std::vector<Entity::Ptr> m_pendingDefinitions;
         std::map<ParticleController::SystemID, std::pair<Entity*, ParticleSystem::Definition>> m_activeSystems;
     };

@@ -60,7 +60,7 @@ namespace xy
         ~SpriteBatch() = default;
 
         xy::Component::Type type() const override { return xy::Component::Type::Drawable; }
-        void entityUpdate(xy::Entity&, float);
+        void entityUpdate(float);
         sf::FloatRect globalBounds() const override { return m_globalBounds; }
 
         /*!
@@ -109,7 +109,7 @@ namespace xy
         ~Sprite() = default;
 
         xy::Component::Type type() const override { return xy::Component::Type::Script; }
-        void entityUpdate(xy::Entity&, float) override;
+        void entityUpdate(float) override;
 
         /*!
         \brief Sets the sub-rectangle of the SpriteBatch texture this sprite should

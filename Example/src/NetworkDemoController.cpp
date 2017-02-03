@@ -39,8 +39,9 @@ NetworkController::NetworkController(xy::MessageBus& mb)
 }
 
 //public
-void NetworkController::entityUpdate(xy::Entity& entity, float dt)
+void NetworkController::entityUpdate(float dt)
 {
+    xy::Entity& entity = *getEntity();
     auto movement = m_destination - entity.getPosition();
     if (xy::Util::Vector::lengthSquared(movement) < 1.5f)
     {

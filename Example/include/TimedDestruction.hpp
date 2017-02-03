@@ -46,11 +46,11 @@ public:
     }
 
     xy::Component::Type type() const override { return xy::Component::Type::Script; }
-    void entityUpdate(xy::Entity& ent, float) override
+    void entityUpdate(float) override
     {
         if (m_clock.getElapsedTime().asSeconds() > m_timeout)
         {
-            ent.destroy();
+            getEntity()->destroy();
         }
     }
 

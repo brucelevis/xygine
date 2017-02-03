@@ -50,7 +50,7 @@ SoundPlayer::SoundPlayer(xy::MessageBus& mb, xy::SoundResource& sr)
 }
 
 //public
-void SoundPlayer::entityUpdate(xy::Entity&, float)
+void SoundPlayer::entityUpdate(float)
 {
     m_sounds.remove_if([](const sf::Sound& s) {return (s.getStatus() == sf::Sound::Stopped); });
 }

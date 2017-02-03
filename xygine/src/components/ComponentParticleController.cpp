@@ -37,8 +37,7 @@ namespace
 using namespace xy;
 
 ParticleController::ParticleController(MessageBus& mb)
-    : Component (mb, this),
-    m_entity    (nullptr)
+    : Component (mb, this)
 {
 
 }
@@ -49,15 +48,14 @@ Component::Type ParticleController::type() const
     return Component::Type::Script;
 }
 
-void ParticleController::entityUpdate(Entity&, float){}
+void ParticleController::entityUpdate(float){}
 
 void ParticleController::onStart(Entity& entity)
 {
-    m_entity = &entity;
     for (auto i = 0u; i < m_pendingDefinitions.size(); ++i)
     {
-	Entity::Ptr e = std::move(m_pendingDefinitions[i]);      
-	m_entity->addChild(e);
+	    Entity::Ptr e = std::move(m_pendingDefinitions[i]);      
+	    entity.addChild(e);
     }
     m_pendingDefinitions.clear();
 }
@@ -67,9 +65,9 @@ void ParticleController::addDefinition(SystemID id, const ParticleSystem::Defini
     auto ent = Entity::create(getMessageBus());
     m_activeSystems[id] = std::make_pair(ent.get(), d);
     
-    if (m_entity)
+    if (getEntity())
     {
-        m_entity->addChild(ent);
+        getEntity()->addChild(ent);
     }
     else
     {

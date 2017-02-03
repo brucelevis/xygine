@@ -66,7 +66,7 @@ namespace xy
         ~SfDrawableComponent() = default;
 
         Component::Type type() const override { return Component::Type::Drawable; }
-        void entityUpdate(Entity& entity, float) override
+        void entityUpdate(float) override
         {
             //m_globalBounds = entity.getWorldTransform().transformRect(m_drawable.getGlobalBounds());
         }

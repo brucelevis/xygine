@@ -164,7 +164,8 @@ namespace xy
             {
                 m_boundedComponents.push_back(c.get());
             }
-            c->setParentUID(m_uid);
+
+            c->m_entity = this;
             c->onStart(*this);
             
             m_pendingComponents.push_back(std::move(c));

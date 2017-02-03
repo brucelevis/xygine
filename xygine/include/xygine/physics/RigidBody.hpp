@@ -92,7 +92,7 @@ namespace xy
                 return Component::Type::Physics;
             }
 
-            void entityUpdate(Entity&, float) override;
+            void entityUpdate(float) override;
             void onStart(Entity&) override;
             void destroy() override;
 

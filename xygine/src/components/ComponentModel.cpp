@@ -64,8 +64,11 @@ Model::Model(MessageBus& mb, const Mesh& mesh, const MeshRenderer::Lock&)
     m_boundingBox = mesh.getBoundingBox();
 }
 
-void Model::entityUpdate(Entity& entity, float dt)
+void Model::entityUpdate(float dt)
 {
+    XY_ASSERT(getEntity(), "entity null");
+    Entity& entity = *getEntity();
+
     const auto position = entity.getWorldPosition();
     m_worldMatrix = glm::translate(glm::mat4(), glm::vec3(position.x, position.y, 0.f));
     

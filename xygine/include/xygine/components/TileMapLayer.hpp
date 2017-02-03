@@ -65,7 +65,7 @@ namespace xy
         ~TileMapLayer() = default;
 
         xy::Component::Type type() const override { return Component::Type::Drawable; }
-        void entityUpdate(Entity&, float) override;
+        void entityUpdate(float) override;
         sf::FloatRect globalBounds() const override { return m_globalBounds; }
 
         void setTileData(const tmx::TileLayer*, const std::vector<tmx::Tileset>&, const tmx::Map&, TextureResource&, ShaderResource&);

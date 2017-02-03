@@ -42,8 +42,11 @@ SpriteBatch::SpriteBatch(xy::MessageBus& mb)
 }
 
 //public
-void SpriteBatch::entityUpdate(xy::Entity& entity, float)
+void SpriteBatch::entityUpdate(float)
 {
+    XY_ASSERT(getEntity(), "enetiy null");
+    xy::Entity& entity = *getEntity();
+
     //clear destroyed sprites
     m_sprites.erase(std::remove_if(m_sprites.begin(), m_sprites.end(),
         [](const Sprite* spr)
@@ -135,9 +138,10 @@ Sprite::Sprite(xy::MessageBus& mb)
 }
 
 //public
-void Sprite::entityUpdate(xy::Entity& entity, float dt)
+void Sprite::entityUpdate(float dt)
 {
-    m_transform = entity.getTransform();
+    XY_ASSERT(getEntity(), "enitity null");
+    m_transform = getEntity()->getTransform();
 }
 
 void Sprite::setTextureRect(const sf::FloatRect& rect)

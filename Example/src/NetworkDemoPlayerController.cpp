@@ -48,13 +48,13 @@ PlayerController::PlayerController(xy::MessageBus& mb)
 }
 
 //public
-void PlayerController::entityUpdate(xy::Entity& entity, float dt)
+void PlayerController::entityUpdate(float dt)
 {
     parseCurrentInput();
     
-    auto position = entity.getWorldPosition();
+    auto position = getEntity()->getWorldPosition();
     position.y = std::min(bounds.y, std::max(bounds.x, m_currentInput.position));
-    entity.setWorldPosition(position);
+    getEntity()->setWorldPosition(position);
 }
 
 void PlayerController::onStart(xy::Entity& entity)
@@ -87,7 +87,7 @@ void PlayerController::reconcile(float position, sf::Uint64 inputId)
     for (const auto& input : m_reconcileInputs)
     {
         m_currentInput = input;
-        entityUpdate(*m_entity, 0.f);
+        entityUpdate(0.f);
     }
 }
 

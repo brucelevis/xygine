@@ -44,8 +44,11 @@ Camera::Camera(MessageBus& mb, const sf::View& initialView)
 }
 
 //public
-void Camera::entityUpdate(Entity& entity, float)
+void Camera::entityUpdate(float)
 {
+    XY_ASSERT(getEntity(), "entity null");
+    Entity& entity = *getEntity();
+
     m_position = entity.getWorldPosition();
     m_rotation = entity.getRotation();
 }

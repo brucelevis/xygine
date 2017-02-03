@@ -26,6 +26,7 @@ source distribution.
 *********************************************************************/
 
 #include <xygine/components/Component.hpp>
+#include <xygine/Entity.hpp>
 
 using namespace xy;
 
@@ -73,7 +74,7 @@ void Component::destroy()
     auto msg = m_messageBus.post<Message::ComponentEvent>(Message::ComponentSystemMessage);
     msg->action = Message::ComponentEvent::Deleted;
     msg->ptr = this;
-    msg->entityID = m_parentUID;
+    msg->entityID = getEntity()->getUID();
 }
 
 bool Component::destroyed() const
@@ -81,9 +82,10 @@ bool Component::destroyed() const
     return m_destroyed;
 }
 
-void Component::setParentUID(sf::Uint64 uid)
+sf::Uint64 Component::getParentUID() const
 {
-    m_parentUID = uid;
+    XY_ASSERT(m_entity, "entity null");
+    return m_entity->getUID();
 }
 
 void Component::setName(const std::string& name)
@@ -110,9 +112,4 @@ sf::FloatRect Component::globalBounds() const
 MessageBus& Component::getMessageBus() const
 {
     return m_messageBus;
-}
-
-sf::Uint64 Component::getParentUID() const
-{
-    return m_parentUID;
 }

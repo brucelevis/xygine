@@ -82,7 +82,7 @@ Component::Type AnimatedDrawable::type() const
     return Component::Type::Drawable;
 }
 
-void AnimatedDrawable::entityUpdate(Entity&, float dt)
+void AnimatedDrawable::entityUpdate(float dt)
 {
     if (m_playing)
     {

@@ -58,8 +58,11 @@ RigidBody::~RigidBody()
 }
 
 //public
-void RigidBody::entityUpdate(Entity& entity, float dt)
+void RigidBody::entityUpdate(float dt)
 {    
+    XY_ASSERT(getEntity(), "null entity");
+    xy::Entity& entity = *getEntity();
+    
     entity.setRotation(World::boxToSfAngle(m_body->GetAngle()));
     entity.setWorldPosition(World::boxToSfVec(m_body->GetPosition()));
 

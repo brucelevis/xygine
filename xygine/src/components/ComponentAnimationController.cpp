@@ -45,7 +45,7 @@ Component::Type AnimationController::type() const
     return Component::Type::Script;
 }
 
-void AnimationController::entityUpdate(Entity&, float){}
+void AnimationController::entityUpdate(float){}
 
 void AnimationController::onStart(Entity& entity)
 {

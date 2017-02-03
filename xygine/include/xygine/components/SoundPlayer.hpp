@@ -58,7 +58,7 @@ namespace xy
         ~SoundPlayer() = default;
 
         xy::Component::Type type() const override { return xy::Component::Type::Script; }
-        void entityUpdate(xy::Entity&, float) override;
+        void entityUpdate(float) override;
 
         using ResourceID = sf::Int32;
         /*!

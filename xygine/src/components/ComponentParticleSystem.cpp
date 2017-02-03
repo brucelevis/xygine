@@ -75,11 +75,13 @@ Component::Type ParticleSystem::type() const
     return Component::Type::Drawable;
 }
 
-void ParticleSystem::entityUpdate(Entity& entity, float dt)
+void ParticleSystem::entityUpdate(float dt)
 {
+    XY_ASSERT(getEntity(), "entity null");
+
     update(dt);
     if(!m_followParent)
-        m_position = entity.getWorldPosition();
+        m_position = getEntity()->getWorldPosition();
 
     //if (m_destroyWhenStopped && !active())
     //{

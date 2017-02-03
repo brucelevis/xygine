@@ -39,9 +39,9 @@ LineDrawable::LineDrawable(xy::MessageBus& mb)
     m_alpha(0u){}
 
 //public
-void LineDrawable::entityUpdate(xy::Entity& entity, float)
+void LineDrawable::entityUpdate(float)
 {
-    m_transform = entity.getWorldTransform().getInverse();
+    m_transform = getEntity()->getWorldTransform().getInverse();
 }
 
 void LineDrawable::setColour(sf::Color c)

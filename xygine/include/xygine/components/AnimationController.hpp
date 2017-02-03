@@ -51,7 +51,7 @@ namespace xy
         ~AnimationController() = default;
 
         Component::Type type() const override;
-        void entityUpdate(Entity&, float) override;
+        void entityUpdate(float) override;
 
         void onStart(Entity&) override;
 

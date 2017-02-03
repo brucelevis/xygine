@@ -43,7 +43,7 @@ namespace PhysDemo
         ~LineDrawable() = default;
 
         xy::Component::Type type() const override { return xy::Component::Type::Drawable; }
-        void entityUpdate(xy::Entity&, float) override;
+        void entityUpdate(float) override;
 
         void setColour(sf::Color);
         void enable(bool);

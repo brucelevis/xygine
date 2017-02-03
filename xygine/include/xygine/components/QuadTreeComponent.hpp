@@ -68,7 +68,7 @@ namespace xy
         ~QuadTreeComponent();
 
         Component::Type type() const override;
-        void entityUpdate(Entity&, float) override;
+        void entityUpdate(float) override;
         void onStart(Entity&) override;
         void destroy() override;
 
@@ -122,8 +122,6 @@ namespace xy
 
         sf::Clock m_timer;
         std::list<std::pair<sf::Int32, sf::Transform>> m_transformBuffer;
-
-        Entity* m_entity;
     };
 }
 #endif //XY_QUADTREE_COMPONENT_HPP_

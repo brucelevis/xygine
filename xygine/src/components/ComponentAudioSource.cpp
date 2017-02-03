@@ -66,8 +66,11 @@ AudioSource::~AudioSource()
 }
 
 //public
-void AudioSource::entityUpdate(Entity& entity, float dt)
+void AudioSource::entityUpdate(float dt)
 {
+    XY_ASSERT(getEntity(), "entity null");
+    Entity& entity = *getEntity();
+
     auto pos = entity.getWorldPosition();
 
     m_currentSource->setPosition(pos.x, pos.y, 0.f);

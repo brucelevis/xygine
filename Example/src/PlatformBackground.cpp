@@ -70,7 +70,7 @@ Background::Background(xy::MessageBus& mb, xy::TextureResource& tr)
 }
 
 //public
-void Background::entityUpdate(xy::Entity& entity, float dt)
+void Background::entityUpdate(float dt)
 {
     const auto& tx = xy::Scene::getViewMatrix().getInverse();
     sf::Vector2f offset = tx.transformPoint({});

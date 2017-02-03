@@ -102,7 +102,7 @@ namespace xy
         const AnimatedDrawable& operator = (const AnimatedDrawable&) = delete;
 
         Component::Type type() const override;
-        void entityUpdate(Entity&, float dt) override;
+        void entityUpdate(float dt) override;
 
         sf::FloatRect localBounds() const override;
         sf::FloatRect globalBounds() const override;

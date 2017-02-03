@@ -46,8 +46,11 @@ PointLight::PointLight(MessageBus& mb, float range, float radius, const sf::Colo
 }
 
 //public
-void PointLight::entityUpdate(Entity& entity, float dt)
+void PointLight::entityUpdate(float dt)
 {
+    XY_ASSERT(getEntity(), "entity null");
+    Entity& entity = *getEntity();
+
     auto worldPos = entity.getWorldPosition();
     m_position.x = worldPos.x;
     m_position.y = worldPos.y;

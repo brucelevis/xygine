@@ -88,7 +88,7 @@ CaveDrawable::CaveDrawable(xy::MessageBus& mb)
 }
 
 //public
-void CaveDrawable::entityUpdate(xy::Entity&, float)
+void CaveDrawable::entityUpdate(float)
 {
 
 

@@ -49,9 +49,9 @@ PlayerController::PlayerController(xy::MessageBus& mb)
 }
 
 //public
-void PlayerController::entityUpdate(xy::Entity& entity, float dt)
+void PlayerController::entityUpdate(float dt)
 {
-    update(entity, dt);
+    update(*getEntity(), dt);
 }
 
 void PlayerController::onStart(xy::Entity& entity)

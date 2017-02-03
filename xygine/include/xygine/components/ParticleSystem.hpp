@@ -123,7 +123,7 @@ namespace xy
         ~ParticleSystem() = default;
 
         Component::Type type() const override;
-        void entityUpdate(Entity&, float) override;
+        void entityUpdate(float) override;
         void onParentDestroyed(Entity&) override;
 
         sf::FloatRect localBounds() const override;

@@ -39,7 +39,7 @@ namespace NetDemo
         ~NetworkController() = default;
 
         xy::Component::Type type() const override { return xy::Component::Type::Script; }
-        void entityUpdate(xy::Entity&, float) override;
+        void entityUpdate(float) override;
 
         void setDestination(const sf::Vector2f&);
 

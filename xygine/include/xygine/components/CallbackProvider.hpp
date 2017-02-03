@@ -53,7 +53,7 @@ namespace xy
         ~CallbackProvider() = default;
 
         xy::Component::Type type() const override { return xy::Component::Type::Script; }
-        void entityUpdate(Entity&e, float dt) override { for (auto& cb : m_updateCallbacks) cb(e, dt); }
+        void entityUpdate(float dt) override { for (auto& cb : m_updateCallbacks) cb(*getEntity(), dt); }
         void onStart(Entity& e) override { for (auto& cb : m_onStartCallbacks) cb(e); }
         void onDelayedStart(Entity& e) override { for (auto& cb : m_delayedStartCallbacks) cb(e); }
         void onParentDestroyed(Entity& e) { for (auto& cb : m_parentDestroyedCallbacks) cb(e); }

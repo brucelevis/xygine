@@ -58,6 +58,7 @@ namespace xy
     */
     class XY_EXPORT_API Component
     {
+        friend class Entity;
     public:
         /*!
         \brief Component Message Handler
@@ -111,7 +112,7 @@ namespace xy
         Component(MessageBus& m, T*)
             : m_messageBus  (m),
             m_destroyed     (false),
-            m_parentUID     (0u),
+            m_entity        (nullptr),
             m_typeIndex     (typeid(T)){}
 
         virtual ~Component();
@@ -130,14 +131,13 @@ namespace xy
         /*!
         \brief Used to update the component's state
 
-        This is called once per frame by the component's parent entity
+        This is called once per frame
         providing the opportunity to update not only the component but
         also the entity and potentially other components attached to it
 
-        \param Entity reference to parent entity of this component
         \param float The current frame time aka delta time
         */
-        virtual void entityUpdate(Entity&, float) = 0;
+        virtual void entityUpdate(float) = 0;
         /*!
         \brief Message handler
 
@@ -210,13 +210,7 @@ namespace xy
         \brief Returns true if the component has been marked for destruction
         */
         bool destroyed() const;
-        /*!
-        \brief Sets the parent UID of the component
 
-        This is automatically called by xygine, and should not be used for any
-        other purpose. You have been warned.
-        */
-        void setParentUID(sf::Uint64 uid);
         /*!
         \brief Returns the UID of this component's parent.
         */
@@ -283,11 +277,13 @@ namespace xy
         }
         MessageBus& getMessageBus() const;
 
+        Entity* getEntity() { return m_entity; }
+
     private:
         MessageBus& m_messageBus;
         bool m_destroyed;
 
-        sf::Uint64 m_parentUID;
+        xy::Entity* m_entity;
         std::string m_name;
         UniqueType m_typeIndex;
 

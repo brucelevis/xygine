@@ -58,7 +58,7 @@ namespace xy
         PointLight(MessageBus&, float range, float radius, const sf::Color& diffuseColour = sf::Color::White, const sf::Color& specularColour = sf::Color::White);
 
         Component::Type type() const { return Component::Type::Script; }
-        void entityUpdate(Entity&, float) override;
+        void entityUpdate(float) override;
 
         /*!
         \brief Set the virtual z-depth of the light.

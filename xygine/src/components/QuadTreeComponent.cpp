@@ -43,8 +43,7 @@ QuadTreeComponent::QuadTreeComponent(MessageBus& mb, const sf::FloatRect& bounds
     : Component     (mb, this),
     m_bounds        (bounds),
     m_quadTree      (nullptr),
-    m_quadTreeNode  (nullptr),
-    m_entity        (nullptr)
+    m_quadTreeNode  (nullptr)
 {
 
 }
@@ -60,8 +59,11 @@ Component::Type QuadTreeComponent::type() const
     return Component::Type::Physics;
 }
 
-void QuadTreeComponent::entityUpdate(Entity& entity, float dt)
+void QuadTreeComponent::entityUpdate(float dt)
 {
+    XY_ASSERT(getEntity(), "entity null");
+    Entity& entity = *getEntity();
+
     if (m_transformBuffer.size() == maxBuffer) m_transformBuffer.pop_front();
     m_transformBuffer.push_back(std::make_pair(m_timer.getElapsedTime().asMilliseconds(), m_transform));
 
@@ -72,13 +74,11 @@ void QuadTreeComponent::entityUpdate(Entity& entity, float dt)
 void QuadTreeComponent::onStart(Entity& entity)
 {
     m_transform = entity.getTransform();
-    m_entity = &entity;
 }
 
 void QuadTreeComponent::destroy()
 {
     removeFromQuadTree();
-    m_entity = nullptr;
 
     Component::destroy();
 }
@@ -149,5 +149,5 @@ void QuadTreeComponent::setQuadTreeNode(QuadTreeNode* qn)
 
 Entity* QuadTreeComponent::getEntity()
 {
-    return m_entity;
+    return Component::getEntity();
 }

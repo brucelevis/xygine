@@ -54,8 +54,10 @@ BallLogic::BallLogic(xy::MessageBus& mb)
 }
 
 //public
-void BallLogic::entityUpdate(xy::Entity& entity, float dt)
+void BallLogic::entityUpdate(float dt)
 {
+    xy::Entity& entity = *getEntity();
+
     m_stepCount++;
     m_deltaHistory.push_back(dt);
     
@@ -120,7 +122,7 @@ void BallLogic::reconcile(const sf::Vector2f& position, const sf::Vector2f& velo
 
     while (m_stepCount < destCount)
     {
-        entityUpdate(*m_entity, m_deltaHistory[m_stepCount - stepCount]);
+        entityUpdate(m_deltaHistory[m_stepCount - stepCount]);
     }
 
     std::vector<float> newVec;

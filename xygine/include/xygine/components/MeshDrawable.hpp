@@ -54,7 +54,7 @@ namespace xy
         MeshDrawable(const MeshDrawable&) = delete;
 
         xy::Component::Type type() const override { return xy::Component::Type::Drawable; }
-        void entityUpdate(Entity&, float) override;
+        void entityUpdate(float) override;
         sf::FloatRect globalBounds() const override { return m_sprite.getGlobalBounds(); }
 
         /*!

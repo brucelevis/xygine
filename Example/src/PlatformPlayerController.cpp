@@ -63,7 +63,7 @@ PlayerController::PlayerController(xy::MessageBus& mb)
 }
 
 //public
-void PlayerController::entityUpdate(xy::Entity&, float dt)
+void PlayerController::entityUpdate(float dt)
 {
     float rotation = m_model->getRotation(xy::Model::Axis::Z);
     if (m_faceLeft && rotation > -faceRotation)
