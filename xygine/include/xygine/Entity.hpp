@@ -149,8 +149,8 @@ namespace xy
         Added components must be derived from the Component class
         \see Component
         */
-        template <typename T, enable_if<std::is_base_of<Component, T>>...>
-        T* addComponent(std::unique_ptr<T>& component)
+        template <typename T, typename D, enable_if<std::is_base_of<Component, T>>...>
+        T* addComponent(std::unique_ptr<T, D>& component)
         {
             T* ret = component.get();
             Component::Ptr c(static_cast<Component*>(component.release()));

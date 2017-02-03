@@ -50,6 +50,11 @@ namespace xy
     class Message;
     class MessageBus;
 
+    namespace Detail
+    {
+        template <class T> class ComponentSource;
+    }
+
     /*!
     \brief Abstract base class for creating new components
 
@@ -59,6 +64,7 @@ namespace xy
     class XY_EXPORT_API Component
     {
         friend class Entity;
+        template <class T> friend class ComponentSource;
     public:
         /*!
         \brief Component Message Handler
