@@ -43,6 +43,9 @@ source distribution.
 #include <xygine/mesh/MaterialResource.hpp>
 //-------
 
+#include <xygine/components/AnimatedDrawable.hpp>
+#include <xygine/detail/ComponentSource.hpp>
+
 #include <SFML/Graphics/Text.hpp>
 
 
@@ -71,6 +74,8 @@ private:
     xy::ShaderResource m_shaderResource;
 
     xy::MeshRenderer m_meshRenderer;
+
+    xy::Detail::ComponentSource<xy::AnimatedDrawable> m_componentSource;
 
     enum MeshID
     {

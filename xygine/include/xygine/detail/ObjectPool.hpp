@@ -69,7 +69,7 @@ namespace xy
                 m_slots         (size),
                 m_firstFreeIndex(0)
             {
-                XY_ASSERT(size < MAX_BUFFER_SIZE, "max pool size is 2048 objects");
+                XY_ASSERT(size <= MAX_BUFFER_SIZE, "max pool size is 2048 objects");
 
                 auto stride = sizeof(T);
                 for (auto i = 0u; i < size; ++i)

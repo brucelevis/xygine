@@ -39,14 +39,79 @@ namespace xy
     class Component;
     namespace Detail
     {
+        //ensures ownership of components by entities
+        template <class T>
+        class XY_EXPORT_API ComponentPtr
+        {
+        public:
+            ComponentPtr(T* p = nullptr) : m_ptr(p) { static_assert(std::is_base_of<xy::Component, T>::value, "Requires component type"); }
+            ~ComponentPtr() { if(m_ptr) static_cast<xy::Component*>(m_ptr)->destroy(); }
+            ComponentPtr(const ComponentPtr<T>&) = delete;
+            ComponentPtr<T>& operator = (const ComponentPtr<T>&) = delete;
+            ComponentPtr(ComponentPtr<T>&& other)
+            {
+                if (&other == this) return;
+                
+                this->m_ptr = other.m_ptr;
+                other.m_ptr = nullptr;
+            }
+            ComponentPtr<T>& operator = (ComponentPtr<T>&& other)
+            {
+                if (&other == this) return *this;
+                
+                this->m_ptr = other.m_ptr;
+                other.m_ptr = nullptr;
+                return *this;
+            }
+
+            bool operator == (const ComponentPtr<T>& other) const
+            {
+                return m_ptr == other.m_ptr;
+            }
+
+            bool operator != (const ComponentPtr<T>& other) const 
+            {
+                return m_ptr != other.m_ptr;
+            }
+
+            bool operator == (nullptr_t n) const
+            {
+                return m_ptr == n;
+            }
+
+            bool operator != (nullptr_t n) const
+            {
+                return m_ptr != n;
+            }
+
+            explicit operator bool() const
+            {
+                return m_ptr != nullptr;
+            }
+
+            T& operator * () const noexcept
+            {
+                return *m_ptr;
+            }
+
+            T* operator -> () const noexcept
+            {
+                return m_ptr;
+            }
+
+            T* get() { return m_ptr; }
+
+        private:
+            T* m_ptr;
+        };
+
         template <class T>
         class XY_EXPORT_API ComponentSource final
         {
         public:
             ComponentSource() : m_pool(2048)
             {
-                static_assert(std::is_base_of<xy::Component, T>::value);
-
+                static_assert(std::is_base_of<xy::Component, T>::value, "Requires component type");
             }
             ~ComponentSource() {}
 
@@ -56,18 +121,23 @@ namespace xy
                     [](const ObjectPool<T>::Ptr& p)
                 {
                     auto ptr = static_cast<xy::Component*>(p.get());
-                    return (!ptr->m_entity || m_entity->destroyed());
+                    return (!ptr->m_entity || ptr->m_entity->destroyed() || ptr->destroyed());
                 }));
 
                 for (auto& c : m_components) c->update(dt);
             }
 
             template <typename... Args>
-            T* create(Args&&... args) { return nullptr; }
+            ComponentPtr<T> create(Args&&... args)
+            {
+                m_components.push_back(std::move(m_pool.get(std::forward<Args>(args)...)));
+                ComponentPtr<T> ptr(m_components.back().get());
+                return std::move(ptr);
+            }
 
         private:
             ObjectPool<T> m_pool;
-            std::vector<ObjectPool<T>::Ptr> m_components;
+            std::vector<std::unique_ptr<T, std::function<void(T*)>>> m_components;
         };
     }
 }

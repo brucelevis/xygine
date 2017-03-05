@@ -32,9 +32,6 @@ source distribution.
 #include <xygine/ui/Marquee.hpp>
 #include <xygine/util/Random.hpp>
 
-#include <xygine/detail/ComponentSource.hpp>
-#include <xygine/components/AnimatedDrawable.hpp>
-
 #include <SFML/Window/Mouse.hpp>
 
 #include <fstream>
@@ -57,8 +54,6 @@ MenuMainState::MenuMainState(xy::StateStack& stack, Context context)
     xy::App::setMouseCursorVisible(false);
 
     context.appInstance.setWindowTitle("xygine Examples");
-
-    //xy::Detail::ComponentSource<xy::AnimatedDrawable> buns;
 }
 
 //public

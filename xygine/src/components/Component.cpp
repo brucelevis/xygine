@@ -74,7 +74,7 @@ void Component::destroy()
     auto msg = m_messageBus.post<Message::ComponentEvent>(Message::ComponentSystemMessage);
     msg->action = Message::ComponentEvent::Deleted;
     msg->ptr = this;
-    msg->entityID = getEntity()->getUID();
+    msg->entityID = getEntity() ? getEntity()->getUID() : 0;
 }
 
 bool Component::destroyed() const
