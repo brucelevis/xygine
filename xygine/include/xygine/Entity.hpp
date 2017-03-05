@@ -33,7 +33,7 @@ source distribution.
 #include <xygine/Log.hpp>
 #include <xygine/Command.hpp>
 #include <xygine/components/Component.hpp>
-#include <xygine/detail/ObjectPool.hpp>
+#include <xygine/detail/ComponentSource.hpp>
 
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/Drawable.hpp>
@@ -386,8 +386,8 @@ namespace xy
         MessageBus& m_messageBus;
         sf::Int32 m_commandCategories;
 
-        std::vector<std::unique_ptr<Component>> m_pendingComponents;
-        std::vector<std::unique_ptr<Component>> m_components;
+        std::vector<Component::Ptr> m_pendingComponents;
+        std::vector<Component::Ptr> m_components;
         std::vector<sf::Drawable*> m_drawables;
         std::vector<Component*> m_boundedComponents;
 

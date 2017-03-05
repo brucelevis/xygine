@@ -40,7 +40,7 @@ AtlasWindow::AtlasWindow(xy::MessageBus& mb, xy::TextureResource& tr)
 }
 
 //public
-void AtlasWindow::entityUpdate(xy::Entity&, float)
+void AtlasWindow::entityUpdate(float)
 {
 
 }

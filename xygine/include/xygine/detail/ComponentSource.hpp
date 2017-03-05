@@ -26,85 +26,82 @@ source distribution.
 *********************************************************************/
 
 #ifndef XY_COMPONENT_SOURCE_HPP_
-#define XY_COMPONENT_SOURCE_HPP
+#define XY_COMPONENT_SOURCE_HPP_
 
 #include <xygine/detail/ObjectPool.hpp>
-#include <xygine/Entity.hpp>
-#include <xygine/Config.hpp>
 
 #include <vector>
 
 namespace xy
 {
     class Component;
-    namespace Detail
+    //ensures ownership of components by entities
+    //template <class T>
+    class XY_EXPORT_API ComponentPtr
     {
-        //ensures ownership of components by entities
-        template <class T>
-        class XY_EXPORT_API ComponentPtr
+    public:
+        ComponentPtr(xy::Component* p = nullptr) : m_ptr(p) { /*static_assert(std::is_base_of<xy::Component, T>::value, "Requires component type");*/ }
+        ~ComponentPtr() { if (m_ptr) static_cast<xy::Component*>(m_ptr)->destroy(); }
+        ComponentPtr(const ComponentPtr&) = delete;
+        ComponentPtr& operator = (const ComponentPtr&) = delete;
+        ComponentPtr(ComponentPtr&& other)
         {
-        public:
-            ComponentPtr(T* p = nullptr) : m_ptr(p) { static_assert(std::is_base_of<xy::Component, T>::value, "Requires component type"); }
-            ~ComponentPtr() { if(m_ptr) static_cast<xy::Component*>(m_ptr)->destroy(); }
-            ComponentPtr(const ComponentPtr<T>&) = delete;
-            ComponentPtr<T>& operator = (const ComponentPtr<T>&) = delete;
-            ComponentPtr(ComponentPtr<T>&& other)
-            {
-                if (&other == this) return;
-                
-                this->m_ptr = other.m_ptr;
-                other.m_ptr = nullptr;
-            }
-            ComponentPtr<T>& operator = (ComponentPtr<T>&& other)
-            {
-                if (&other == this) return *this;
-                
-                this->m_ptr = other.m_ptr;
-                other.m_ptr = nullptr;
-                return *this;
-            }
+            if (&other == this) return;
 
-            bool operator == (const ComponentPtr<T>& other) const
-            {
-                return m_ptr == other.m_ptr;
-            }
+            this->m_ptr = other.m_ptr;
+            other.m_ptr = nullptr;
+        }
+        ComponentPtr& operator = (ComponentPtr&& other)
+        {
+            if (&other == this) return *this;
 
-            bool operator != (const ComponentPtr<T>& other) const 
-            {
-                return m_ptr != other.m_ptr;
-            }
+            this->m_ptr = other.m_ptr;
+            other.m_ptr = nullptr;
+            return *this;
+        }
 
-            bool operator == (nullptr_t n) const
-            {
-                return m_ptr == n;
-            }
+        bool operator == (const ComponentPtr& other) const
+        {
+            return m_ptr == other.m_ptr;
+        }
 
-            bool operator != (nullptr_t n) const
-            {
-                return m_ptr != n;
-            }
+        bool operator != (const ComponentPtr& other) const
+        {
+            return m_ptr != other.m_ptr;
+        }
 
-            explicit operator bool() const
-            {
-                return m_ptr != nullptr;
-            }
+        bool operator == (nullptr_t n) const
+        {
+            return m_ptr == n;
+        }
 
-            T& operator * () const noexcept
-            {
-                return *m_ptr;
-            }
+        bool operator != (nullptr_t n) const
+        {
+            return m_ptr != n;
+        }
 
-            T* operator -> () const noexcept
-            {
-                return m_ptr;
-            }
+        explicit operator bool() const
+        {
+            return m_ptr != nullptr;
+        }
 
-            T* get() { return m_ptr; }
+        xy::Component& operator * () const noexcept
+        {
+            return *m_ptr;
+        }
 
-        private:
-            T* m_ptr;
-        };
+        xy::Component* operator -> () const noexcept
+        {
+            return m_ptr;
+        }
 
+        xy::Component* get() { return m_ptr; }
+
+    private:
+        xy::Component* m_ptr;
+    };
+    namespace Detail
+    {  
         template <class T>
         class XY_EXPORT_API ComponentSource final
         {
@@ -128,10 +125,10 @@ namespace xy
             }
 
             template <typename... Args>
-            ComponentPtr<T> create(Args&&... args)
+            ComponentPtr create(Args&&... args)
             {
                 m_components.push_back(std::move(m_pool.get(std::forward<Args>(args)...)));
-                ComponentPtr<T> ptr(m_components.back().get());
+                ComponentPtr ptr(static_cast<xy::Component*>(m_components.back().get()));
                 return std::move(ptr);
             }
 
