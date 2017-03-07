@@ -32,6 +32,7 @@ source distribution.
 
 #include <xygine/MessageBus.hpp>
 #include <xygine/Config.hpp>
+#include <xygine/detail/ComponentAllocator.hpp>
 
 #include <SFML/Config.hpp>
 #include <SFML/Graphics/Rect.hpp>
@@ -269,10 +270,10 @@ namespace xy
         \brief Utility function for creating components
         */
         template <typename T, typename... Args>
-        static std::unique_ptr<T> create(Args&&... args)
+        static std::unique_ptr<T, std::function<void(T*)>> create(Detail::ComponentAllocator& ca, Args&&... args)
         {
             static_assert(std::is_base_of<Component, T>::value, "Must derive from Component class");
-            return std::move(std::make_unique<T>(std::forward<Args>(args)...));
+            return std::move(ca.getComponent<T>(std::forward<Args>(args)...));
         }
 
     protected:

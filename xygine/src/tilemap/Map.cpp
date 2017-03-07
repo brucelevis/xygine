@@ -38,6 +38,7 @@ source distribution.
 #include <xygine/Resource.hpp>
 #include <xygine/ShaderResource.hpp>
 #include <xygine/util/Vector.hpp>
+#include <xygine/Scene.hpp>
 
 #include <xygine/physics/CollisionCircleShape.hpp>
 #include <xygine/physics/CollisionEdgeShape.hpp>
@@ -333,7 +334,7 @@ bool Map::load(const std::string& path)
     return true;
 }
 
-std::unique_ptr<TileMapLayer> Map::getDrawable(xy::MessageBus& mb, const Layer& layer, TextureResource& tr, ShaderResource& sr)
+std::unique_ptr<TileMapLayer, std::function<void(TileMapLayer*)>> Map::getDrawable(xy::Scene& scene, xy::MessageBus& mb, const Layer& layer, TextureResource& tr, ShaderResource& sr)
 {
     if (layer.getType() == Layer::Type::Object)
     {
@@ -361,7 +362,7 @@ std::unique_ptr<TileMapLayer> Map::getDrawable(xy::MessageBus& mb, const Layer& 
     while (chunkSize.y % tileSize.y != 0) { chunkSize.y--; }
     LOG("Set chunk size to " + std::to_string(chunkSize.x), Logger::Type::Info);
 
-    auto tml = xy::Component::create<TileMapLayer>(mb, Key(), chunkSize);
+    auto tml = xy::Component::create<TileMapLayer>(scene.getComponentAllocator(), mb, Key(), chunkSize);
     if (layer.getType() == tmx::Layer::Type::Tile)
     {       
         tml->setTileData(dynamic_cast<const TileLayer*>(&layer), m_tilesets, *this, tr, sr);
@@ -374,19 +375,19 @@ std::unique_ptr<TileMapLayer> Map::getDrawable(xy::MessageBus& mb, const Layer& 
     return std::move(tml);
 }
 
-std::unique_ptr<Physics::RigidBody> Map::createRigidBody(xy::MessageBus& mb, const Layer& layer, Physics::BodyType bodyType)
+std::unique_ptr<Physics::RigidBody, std::function<void(Physics::RigidBody*)>> Map::createRigidBody(xy::Scene& scene, xy::MessageBus& mb, const Layer& layer, Physics::BodyType bodyType)
 {
     if (layer.getType() != Layer::Type::Object)
     {
         Logger::log("cannot create RigidBody from non-object group layer", Logger::Type::Warning);
         return nullptr;
     }
-    return createRigidBody(mb, *dynamic_cast<const xy::tmx::ObjectGroup*>(&layer)); //ew.
+    return createRigidBody(scene, mb, *dynamic_cast<const xy::tmx::ObjectGroup*>(&layer)); //ew.
 }
 
-std::unique_ptr<Physics::RigidBody> Map::createRigidBody(xy::MessageBus& mb, const ObjectGroup& og, Physics::BodyType bodyType)
+std::unique_ptr<Physics::RigidBody, std::function<void(Physics::RigidBody*)>> Map::createRigidBody(xy::Scene& scene, xy::MessageBus& mb, const ObjectGroup& og, Physics::BodyType bodyType)
 {
-    auto rb = xy::Component::create<xy::Physics::RigidBody>(mb, bodyType);
+    auto rb = xy::Component::create<xy::Physics::RigidBody>(scene.getComponentAllocator(), mb, bodyType);
     for (const auto& o : og.getObjects())
     {
         processObject(rb.get(), o);
@@ -395,9 +396,9 @@ std::unique_ptr<Physics::RigidBody> Map::createRigidBody(xy::MessageBus& mb, con
     return std::move(rb);
 }
 
-std::unique_ptr<Physics::RigidBody> Map::createRigidBody(xy::MessageBus& mb, const Object& object, Physics::BodyType bodyType)
+std::unique_ptr<Physics::RigidBody, std::function<void(Physics::RigidBody*)>> Map::createRigidBody(xy::Scene& scene, xy::MessageBus& mb, const Object& object, Physics::BodyType bodyType)
 {
-    auto rb = xy::Component::create<xy::Physics::RigidBody>(mb, bodyType);    
+    auto rb = xy::Component::create<xy::Physics::RigidBody>(scene.getComponentAllocator(), mb, bodyType);    
     processObject(rb.get(), object);
     
     return std::move(rb);

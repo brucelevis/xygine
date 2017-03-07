@@ -125,6 +125,10 @@ PlatformDemoState::PlatformDemoState(xy::StateStack& stateStack, Context context
     context.renderWindow.setTitle("xygine Mesh Rendering Demo");
 
     quitLoadingScreen();
+
+    /*auto dwb = m_componentSource.create(m_messageBus);
+    dwb->setBlendMode(sf::BlendAdd);
+    dwb->getForwardVector();*/
 }
 
 bool PlatformDemoState::update(float dt)

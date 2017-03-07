@@ -35,6 +35,7 @@ source distribution.
 #include <xygine/Command.hpp>
 #include <xygine/QuadTree.hpp>
 #include <xygine/components/Camera.hpp>
+#include <xygine/detail/ComponentAllocator.hpp>
 
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
@@ -283,6 +284,13 @@ namespace xy
         */
         const SkyLight& getSkyLight() const { return m_skyLight; }
 
+        /*!
+        \brief Returns a reference to the component allocator for this scene.
+        Direct access to this should not be used, rather components created through
+        xy::Component::create() function.
+        */
+        Detail::ComponentAllocator& getComponentAllocator() { return m_componentAllocator; }
+
     private:
 
         QuadTree m_quadTree; //must live longer than any entity
@@ -291,6 +299,8 @@ namespace xy
         SkyLight m_skyLight;
         std::vector<Entity::Ptr> m_layers;
         std::vector<std::pair<Layer, Entity::Ptr>> m_pendingEntities;
+
+        Detail::ComponentAllocator m_componentAllocator;
 
         Camera* m_defaultCamera;
         const Camera* m_activeCamera;

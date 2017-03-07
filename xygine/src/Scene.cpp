@@ -103,6 +103,9 @@ void Scene::update(float dt)
     //REPORT("Out Light Tree Set", std::to_string(m_lightTree.getOutsideRootSet().size()));
     //REPORT("Quad Tree Size", std::to_string(m_quadTree.getComponentCount()));
 
+    //update remaining components
+    m_componentAllocator.update(dt);
+
     //execute commands
     REPORT("Commands this frame", std::to_string(m_commandQueue.size()));
     while (!m_commandQueue.empty())

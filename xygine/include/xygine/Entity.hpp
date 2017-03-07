@@ -66,6 +66,7 @@ namespace xy
         using Ptr = Detail::ObjectPool<Entity>::Ptr;
     private:
         class Priv final {};
+        using ComponentPtr = std::unique_ptr<Component, std::function<void(Component*)>>;
     public:
 
         template<typename CONDITION>
@@ -153,7 +154,7 @@ namespace xy
         T* addComponent(std::unique_ptr<T, D>& component)
         {
             T* ret = component.get();
-            Component::Ptr c(static_cast<Component*>(component.release()));
+            ComponentPtr c(static_cast<Component*>(component.release()), std::bind(&Entity::customDeleter));
             if (c->type() == Component::Type::Drawable)
             {
                 //store a reference to drawables so they can be drawn
@@ -252,18 +253,18 @@ namespace xy
         Component then the component is automatically destroyed.
         */
         template <typename T>
-        std::unique_ptr<T> removeComponent(const T* component)
+        std::unique_ptr<T, std::function<void(T*)>> removeComponent(const T* component)
         {
             static_assert(std::is_base_of<Component, T>::value, "Must be a component");
             auto it = std::find_if(m_components.begin(), m_components.end(), 
-                [component](const Component::Ptr& ptr)
+                [component](const ComponentPtr& ptr)
             {
                 return ptr.get() == component;
             });
 
             if (it != m_components.end())
             {
-                std::unique_ptr<T> retVal(dynamic_cast<T*>(it->release()));
+                std::unique_ptr<T, std::function<void(T*)>> retVal(dynamic_cast<T*>(it->release()), [](T* p) {p->destroy(); });
                 m_components.erase(it);
                 if (component->type() == Component::Type::Drawable)
                 {
@@ -386,8 +387,8 @@ namespace xy
         MessageBus& m_messageBus;
         sf::Int32 m_commandCategories;
 
-        std::vector<Component::Ptr> m_pendingComponents;
-        std::vector<Component::Ptr> m_components;
+        std::vector<ComponentPtr> m_pendingComponents;
+        std::vector<ComponentPtr> m_components;
         std::vector<sf::Drawable*> m_drawables;
         std::vector<Component*> m_boundedComponents;
 
@@ -404,7 +405,7 @@ namespace xy
         struct FindByName
         {
             FindByName(const std::string& name) : m_name(name){}
-            bool operator()(const Component::Ptr& c){ return (c && c->getName() == m_name); }
+            bool operator()(const ComponentPtr& c){ return (c && c->getName() == m_name); }
         private:
             std::string m_name;
         };
@@ -412,10 +413,12 @@ namespace xy
         struct FindByTypeIndex
         {
             FindByTypeIndex(const std::type_index& ti) : m_ti(ti){}
-            bool operator() (const Component::Ptr& c) { return c->uniqueType() == m_ti; }
+            bool operator() (const ComponentPtr& c) { return c->uniqueType() == m_ti; }
         private:
             const std::type_index& m_ti;
         };
+
+        static void customDeleter(Component* p) { p->destroy(); }
     };
 }
 #endif //XY_ENTITY_HPP_

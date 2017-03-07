@@ -398,6 +398,7 @@ void ParticleSystem::draw(sf::RenderTarget& rt, sf::RenderStates states) const
 #include <xygine/util/Json.hpp>
 #include <xygine/parsers/picojson.h>
 #include <xygine/Resource.hpp>
+#include <xygine/Scene.hpp>
 //-------particle system definition------//
 ParticleSystem::Definition::Definition()
 {
@@ -625,9 +626,9 @@ void ParticleSystem::Definition::loadFromFile(const std::string& path, TextureRe
     }
 }
 
-ParticleSystem::Ptr ParticleSystem::Definition::createSystem(MessageBus& mb) const
+std::unique_ptr<ParticleSystem, std::function<void(ParticleSystem*)>> ParticleSystem::Definition::createSystem(Scene& scene, MessageBus& mb) const
 {
-    auto ps = Component::create<ParticleSystem>(mb);
+    auto ps = Component::create<ParticleSystem>(scene.getComponentAllocator(), mb);
 
     if (texture) ps->setTexture(*texture);
     ps->setColour(colour);

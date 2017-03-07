@@ -146,7 +146,7 @@ void Entity::update(float dt)
 {       
     //remove destroyed components
     m_components.erase(std::remove_if(m_components.begin(), m_components.end(),
-        [&](const Component::Ptr& p)
+        [&](const ComponentPtr& p)
     {
         if (p->destroyed())
         {
@@ -254,7 +254,7 @@ void Entity::handleMessage(const Message& msg)
             {
             case Message::ComponentEvent::Deleted:
                 m_components.erase(std::remove_if(m_components.begin(), m_components.end(),
-                    [&msgData](const Component::Ptr& p)
+                    [&msgData](const ComponentPtr& p)
                 {
                     return msgData.ptr == p.get();
                 }), m_components.end());

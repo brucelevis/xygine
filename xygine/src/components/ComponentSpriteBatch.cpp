@@ -26,6 +26,7 @@ source distribution.
 *********************************************************************/
 
 #include <xygine/Entity.hpp>
+#include <xygine/Scene.hpp>
 #include <xygine/components/SpriteBatch.hpp>
 
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -89,9 +90,9 @@ void SpriteBatch::entityUpdate(float)
     }
 }
 
-std::unique_ptr<Sprite> SpriteBatch::addSprite(xy::MessageBus& mb)
+std::unique_ptr<Sprite, std::function<void(Sprite*)>> SpriteBatch::addSprite(xy::Scene& scene, xy::MessageBus& mb)
 {
-    auto sprite = xy::Component::create<Sprite>(mb);
+    auto sprite = xy::Component::create<Sprite>(scene.getComponentAllocator(), mb);
     m_sprites.push_back(sprite.get());
 
     //set the texture rect if a texture already set

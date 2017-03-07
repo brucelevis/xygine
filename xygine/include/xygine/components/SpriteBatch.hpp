@@ -40,6 +40,7 @@ source distribution.
 namespace xy
 {
     class Sprite;
+    class Scene;
     /*!
     \brief SpriteBatch component.
     The sprite batch component allow batches of multiple sprites which
@@ -70,7 +71,7 @@ namespace xy
         added to this batch, which can then be attached to an existing entity.
         \see xy::Sprite
         */
-        std::unique_ptr<Sprite> addSprite(xy::MessageBus&);
+        std::unique_ptr<Sprite, std::function<void(Sprite*)>> addSprite(xy::Scene&, xy::MessageBus&);
         /*!
         \brief Sets the texture used by this batch.
         All sprites drawn via this batch will use this texture.

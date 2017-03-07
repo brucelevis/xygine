@@ -46,6 +46,7 @@ namespace xy
     class TileMapLayer;
     class ShaderResource;
     class TextureResource;
+    class Scene;
     namespace tmx
     {
         struct XY_EXPORT_API Version
@@ -198,7 +199,7 @@ namespace xy
             a nullptr to be returned.
             \returns Drawable component if successful, else nullptr
             */
-            std::unique_ptr<TileMapLayer> getDrawable(xy::MessageBus&, const Layer&, TextureResource&, ShaderResource&);
+            std::unique_ptr<TileMapLayer, std::function<void(TileMapLayer*)>> getDrawable(xy::Scene&, xy::MessageBus&, const Layer&, TextureResource&, ShaderResource&);
 
             /*!
             \brief Attempts to create a RigidBody component from a given Layer.
@@ -207,7 +208,7 @@ namespace xy
             layers designed to contain, for example, solid collision objects.
             If the given layer is not an ObjectGroup then this function returns a nullptr.
             */
-            std::unique_ptr<Physics::RigidBody> createRigidBody(xy::MessageBus&, const Layer&, Physics::BodyType = Physics::BodyType::Static);
+            std::unique_ptr<Physics::RigidBody, std::function<void(Physics::RigidBody*)>> createRigidBody(xy::Scene&, xy::MessageBus&, const Layer&, Physics::BodyType = Physics::BodyType::Static);
 
             /*!
             \brief Creates a RigidBody component from a given ObjectGroup.
@@ -216,7 +217,7 @@ namespace xy
             layers designed to contain, for example, solid collision objects.
             If the given ObjectGroup is invalid then this function returns a nullptr.
             */
-            std::unique_ptr<Physics::RigidBody> createRigidBody(xy::MessageBus&, const ObjectGroup&, Physics::BodyType = Physics::BodyType::Static);
+            std::unique_ptr<Physics::RigidBody, std::function<void(Physics::RigidBody*)>> createRigidBody(xy::Scene&, xy::MessageBus&, const ObjectGroup&, Physics::BodyType = Physics::BodyType::Static);
 
             /*!
             \brief Creates a RigidBody component from a given object.
@@ -224,7 +225,7 @@ namespace xy
             useful for dynamic items which each require their own physics body. If the
             function fails then it will return nullptr.
             */
-            std::unique_ptr<Physics::RigidBody> createRigidBody(xy::MessageBus&, const Object&, Physics::BodyType = Physics::BodyType::Dynamic);
+            std::unique_ptr<Physics::RigidBody, std::function<void(Physics::RigidBody*)>> createRigidBody(xy::Scene&, xy::MessageBus&, const Object&, Physics::BodyType = Physics::BodyType::Dynamic);
 
             /*!
             \brief Attempts to create a CollisionShape from a given object.

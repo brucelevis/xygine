@@ -42,6 +42,7 @@ source distribution.
 namespace xy
 {
     class TextureResource;
+    class Scene;
     /*!
     \brief Particle System Component
 
@@ -104,7 +105,7 @@ namespace xy
             \returns A new Particle System preconfigured with
             the definition paramters.
             */
-            Ptr createSystem(MessageBus&) const;
+            std::unique_ptr<ParticleSystem, std::function<void(ParticleSystem*)>> createSystem(Scene&, MessageBus&) const;
             /*!
             \brief Loads a particle system configuration file
 

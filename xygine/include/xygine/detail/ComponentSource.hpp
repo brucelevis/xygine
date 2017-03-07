@@ -35,75 +35,17 @@ source distribution.
 namespace xy
 {
     class Component;
-    //ensures ownership of components by entities
-    //template <class T>
-    class XY_EXPORT_API ComponentPtr
-    {
-    public:
-        ComponentPtr(xy::Component* p = nullptr) : m_ptr(p) { /*static_assert(std::is_base_of<xy::Component, T>::value, "Requires component type");*/ }
-        ~ComponentPtr() { if (m_ptr) static_cast<xy::Component*>(m_ptr)->destroy(); }
-        ComponentPtr(const ComponentPtr&) = delete;
-        ComponentPtr& operator = (const ComponentPtr&) = delete;
-        ComponentPtr(ComponentPtr&& other)
-        {
-            if (&other == this) return;
-
-            this->m_ptr = other.m_ptr;
-            other.m_ptr = nullptr;
-        }
-        ComponentPtr& operator = (ComponentPtr&& other)
-        {
-            if (&other == this) return *this;
-
-            this->m_ptr = other.m_ptr;
-            other.m_ptr = nullptr;
-            return *this;
-        }
-
-        bool operator == (const ComponentPtr& other) const
-        {
-            return m_ptr == other.m_ptr;
-        }
-
-        bool operator != (const ComponentPtr& other) const
-        {
-            return m_ptr != other.m_ptr;
-        }
-
-        bool operator == (nullptr_t n) const
-        {
-            return m_ptr == n;
-        }
-
-        bool operator != (nullptr_t n) const
-        {
-            return m_ptr != n;
-        }
-
-        explicit operator bool() const
-        {
-            return m_ptr != nullptr;
-        }
-
-        xy::Component& operator * () const noexcept
-        {
-            return *m_ptr;
-        }
-
-        xy::Component* operator -> () const noexcept
-        {
-            return m_ptr;
-        }
-
-        xy::Component* get() { return m_ptr; }
-
-    private:
-        xy::Component* m_ptr;
-    };
     namespace Detail
     {  
+        class BaseComponentSource
+        {
+        public:
+            virtual ~BaseComponentSource() {}
+            virtual void update(float) = 0;
+        };
+
         template <class T>
-        class XY_EXPORT_API ComponentSource final
+        class /*XY_EXPORT_API*/ ComponentSource final : public BaseComponentSource
         {
         public:
             ComponentSource() : m_pool(2048)
@@ -112,7 +54,7 @@ namespace xy
             }
             ~ComponentSource() {}
 
-            void update(float dt) 
+            void update(float dt) override
             {
                 m_components.erase(std::remove_if(std::begin(m_components), std::end(m_components),
                     [](const ObjectPool<T>::Ptr& p)
@@ -125,16 +67,19 @@ namespace xy
             }
 
             template <typename... Args>
-            ComponentPtr create(Args&&... args)
+            std::unique_ptr<T, std::function<void(T*)>> create(Args&&... args)
             {
                 m_components.push_back(std::move(m_pool.get(std::forward<Args>(args)...)));
-                ComponentPtr ptr(static_cast<xy::Component*>(m_components.back().get()));
+                
+                std::unique_ptr<T, std::function<void(T*)>> ptr(m_components.back().get(), [this](T* p) {customDelete(p); });
                 return std::move(ptr);
             }
 
         private:
             ObjectPool<T> m_pool;
             std::vector<std::unique_ptr<T, std::function<void(T*)>>> m_components;
+
+            static void customDelete(T* p) { p->destroy(); }
         };
     }
 }
