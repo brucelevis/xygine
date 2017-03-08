@@ -45,7 +45,7 @@ namespace xy
         };
 
         template <class T>
-        class /*XY_EXPORT_API*/ ComponentSource final : public BaseComponentSource
+        class ComponentSource final : public BaseComponentSource
         {
         public:
             ComponentSource() : m_pool(2048)
@@ -56,12 +56,12 @@ namespace xy
 
             void update(float dt) override
             {
-                /*m_components.erase(std::remove_if(std::begin(m_components), std::end(m_components),
+                m_components.erase(std::remove_if(std::begin(m_components), std::end(m_components),
                     [](const ObjectPool<T>::Ptr& p)
                 {
                     auto ptr = static_cast<xy::Component*>(p.get());
                     return (!ptr->m_entity || ptr->m_entity->destroyed() || ptr->destroyed());
-                }));*/
+                }), std::end(m_components));
 
                 for (auto& c : m_components) c->entityUpdate(dt);
             }

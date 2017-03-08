@@ -417,8 +417,6 @@ namespace xy
         private:
             const std::type_index& m_ti;
         };
-
-        static void customDeleter(Component* p) { p->destroy(); }
     };
 }
 #endif //XY_ENTITY_HPP_

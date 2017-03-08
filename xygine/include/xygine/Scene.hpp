@@ -285,12 +285,10 @@ namespace xy
         const SkyLight& getSkyLight() const { return m_skyLight; }
 
         /*!
-        \brief Returns a reference to the component allocator for this scene.
-        Direct access to this should not be used, rather components created through
-        xy::Component::create() function.
+        \brief Creates a component of the given type to be added to an entity in this scene.
+        Created components MUST NOT be added to any other scene objects. Any components used
+        on an entity belonging to this scene should only be created via this function.
         */
-        //Detail::ComponentAllocator& getComponentAllocator() { return m_componentAllocator; }
-
         template <typename T, typename... Args>
         std::unique_ptr<T, std::function<void(T*)>> createComponent(Args&&... args)
         {
@@ -298,15 +296,14 @@ namespace xy
         }
 
     private:
+        Detail::ComponentAllocator m_componentAllocator; //must be destructed last
 
         QuadTree m_quadTree; //must live longer than any entity
         QuadTree m_lightTree;
         sf::Color m_ambientColour;
         SkyLight m_skyLight;
         std::vector<Entity::Ptr> m_layers;
-        std::vector<std::pair<Layer, Entity::Ptr>> m_pendingEntities;
-
-        Detail::ComponentAllocator m_componentAllocator;
+        std::vector<std::pair<Layer, Entity::Ptr>> m_pendingEntities;      
 
         Camera* m_defaultCamera;
         const Camera* m_activeCamera;

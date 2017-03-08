@@ -242,7 +242,7 @@ void MaterialEditorState::loadMaterials()
     entity->setPosition(xy::DefaultSceneSize / 2.f);
     m_scene.addEntity(entity, xy::Scene::Layer::FrontRear);
 
-    auto light = xy::Component::create<xy::PointLight>(m_messageBus, 1800.f, 1400.f);
+    auto light = m_scene.createComponent<xy::PointLight>(m_messageBus, 1800.f, 1400.f);
     light->setIntensity(0.8f);
     light->setDepth(100.f);
 
@@ -252,7 +252,7 @@ void MaterialEditorState::loadMaterials()
     entity->addComponent(light);
     m_scene.addEntity(entity, xy::Scene::Layer::FrontMiddle);
 
-    light = xy::Component::create<xy::PointLight>(m_messageBus, 1800.f, 1400.f, sf::Color::Red);
+    light = m_scene.createComponent<xy::PointLight>(m_messageBus, 1800.f, 1400.f, sf::Color::Red);
     light->setIntensity(0.4f);
     light->setDepth(50.f);
 
@@ -262,7 +262,7 @@ void MaterialEditorState::loadMaterials()
     entity->addComponent(light);
     m_scene.addEntity(entity, xy::Scene::Layer::FrontMiddle);
 
-    light = xy::Component::create<xy::PointLight>(m_messageBus, 1800.f, 1400.f, sf::Color::Green);
+    light = m_scene.createComponent<xy::PointLight>(m_messageBus, 1800.f, 1400.f, sf::Color::Green);
     light->setIntensity(0.4f);
     light->setDepth(50.f);
 

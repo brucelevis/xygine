@@ -108,7 +108,7 @@ void ParticleEditorState::buildMenu()
 
 void ParticleEditorState::setupScene()
 {
-    auto ps = xy::Component::create<xy::ParticleSystem>(m_messageBus);
+    auto ps = m_scene.createComponent<xy::ParticleSystem>(m_messageBus);
     ps->start();
     auto entity = xy::Entity::create(m_messageBus);
     entity->setPosition(xy::DefaultSceneSize / 2.f);

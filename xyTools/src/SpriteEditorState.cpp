@@ -154,14 +154,14 @@ void SpriteEditorState::buildScene()
 {
     m_scene.setView(getContext().defaultView);
 
-    auto atlas = xy::Component::create<AtlasWindow>(m_messageBus, m_textureResource);
+    auto atlas = m_scene.createComponent<AtlasWindow>(m_messageBus, m_textureResource);
     auto entity = xy::Entity::create(m_messageBus);
     entity->setPosition(300.f, 20.f);
     entity->addCommandCategories(CommandID::Atlas);
     entity->addComponent(atlas);
     m_scene.addEntity(entity, xy::Scene::Layer::BackRear);
 
-    auto aniSprite = xy::Component::create<xy::AnimatedDrawable>(m_messageBus);
+    auto aniSprite = m_scene.createComponent<xy::AnimatedDrawable>(m_messageBus);
     entity = xy::Entity::create(m_messageBus);
     entity->setPosition(1324.f, 20.f);
     entity->addCommandCategories(CommandID::Animation);
