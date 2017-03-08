@@ -154,7 +154,7 @@ namespace xy
         T* addComponent(std::unique_ptr<T, D>& component)
         {
             T* ret = component.get();
-            ComponentPtr c(static_cast<Component*>(component.release()), std::bind(&Entity::customDeleter));
+            ComponentPtr c(static_cast<Component*>(component.release()), [](Component* p) { p->destroy(); });
             if (c->type() == Component::Type::Drawable)
             {
                 //store a reference to drawables so they can be drawn

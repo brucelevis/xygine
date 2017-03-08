@@ -289,7 +289,13 @@ namespace xy
         Direct access to this should not be used, rather components created through
         xy::Component::create() function.
         */
-        Detail::ComponentAllocator& getComponentAllocator() { return m_componentAllocator; }
+        //Detail::ComponentAllocator& getComponentAllocator() { return m_componentAllocator; }
+
+        template <typename T, typename... Args>
+        std::unique_ptr<T, std::function<void(T*)>> createComponent(Args&&... args)
+        {
+            return m_componentAllocator.getComponent<T>(std::forward<Args>(args)...);
+        }
 
     private:
 

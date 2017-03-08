@@ -35,7 +35,7 @@ source distribution.
 
 CollisionWorld::CollisionWorld(xy::Scene& scene, xy::MessageBus& messageBus, sf::Color colour)
 {
-    auto drawable = xy::Component::create<xy::SfDrawableComponent<sf::RectangleShape>>(messageBus);
+    auto drawable = scene.createComponent<xy::SfDrawableComponent<sf::RectangleShape>>(messageBus);
     drawable->getDrawable().setSize({ 1920.f, 20.f });
     drawable->getDrawable().setFillColor(colour);
 
@@ -44,7 +44,7 @@ CollisionWorld::CollisionWorld(xy::Scene& scene, xy::MessageBus& messageBus, sf:
 
     m_entities.push_back(scene.addEntity(entity, xy::Scene::Layer::BackRear));
 
-    drawable = xy::Component::create<xy::SfDrawableComponent<sf::RectangleShape>>(messageBus);
+    drawable = scene.createComponent<xy::SfDrawableComponent<sf::RectangleShape>>(messageBus);
     drawable->getDrawable() = dc->getDrawable();
 
     entity = xy::Entity::create(messageBus);
@@ -53,7 +53,7 @@ CollisionWorld::CollisionWorld(xy::Scene& scene, xy::MessageBus& messageBus, sf:
 
     m_entities.push_back(scene.addEntity(entity, xy::Scene::Layer::BackRear));
 
-    auto netDrawable = xy::Component::create<xy::SfDrawableComponent<Net>>(messageBus);
+    auto netDrawable = scene.createComponent<xy::SfDrawableComponent<Net>>(messageBus);
     entity = xy::Entity::create(messageBus);
     entity->setPosition(950.f, 0.f);
     entity->addComponent(netDrawable);

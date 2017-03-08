@@ -51,11 +51,6 @@ namespace xy
     class Message;
     class MessageBus;
 
-    namespace Detail
-    {
-        template <class T> class ComponentSource;
-    }
-
     /*!
     \brief Abstract base class for creating new components
 
@@ -65,7 +60,8 @@ namespace xy
     class XY_EXPORT_API Component
     {
         friend class Entity;
-        template <class T> friend class ComponentSource;
+        template <class T> 
+        friend class Detail::ComponentSource;
     public:
         /*!
         \brief Component Message Handler
@@ -269,12 +265,12 @@ namespace xy
         /*!
         \brief Utility function for creating components
         */
-        template <typename T, typename... Args>
+        /*template <typename T, typename... Args>
         static std::unique_ptr<T, std::function<void(T*)>> create(Detail::ComponentAllocator& ca, Args&&... args)
         {
             static_assert(std::is_base_of<Component, T>::value, "Must derive from Component class");
-            return std::move(ca.getComponent<T>(std::forward<Args>(args)...));
-        }
+            return std::move(ca.getComponent<T>(std::forward<Args&&>(args)...));
+        }*/
 
     protected:
         template <typename T>

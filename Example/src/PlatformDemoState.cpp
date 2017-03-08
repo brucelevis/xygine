@@ -125,10 +125,6 @@ PlatformDemoState::PlatformDemoState(xy::StateStack& stateStack, Context context
     context.renderWindow.setTitle("xygine Mesh Rendering Demo");
 
     quitLoadingScreen();
-
-    /*auto dwb = m_componentSource.create(m_messageBus);
-    dwb->setBlendMode(sf::BlendAdd);
-    dwb->getForwardVector();*/
 }
 
 bool PlatformDemoState::update(float dt)
@@ -375,7 +371,7 @@ void PlatformDemoState::cacheMeshes()
     lightMaterial.addProperty({ "u_colour", sf::Color(135, 135, 80) });
     lightMaterial.addProperty({ "u_maskColour", sf::Color::Blue });
 
-    auto light = xy::Component::create<xy::PointLight>(m_messageBus, 800.f, 500.f, sf::Color(255, 255, 100));
+    auto light = m_scene.createComponent<xy::PointLight>(m_messageBus, 800.f, 500.f, sf::Color(255, 255, 100));
     light->setDepth(400.f);
     light->enableShadowCasting(true);
 
@@ -392,7 +388,7 @@ void PlatformDemoState::cacheMeshes()
 
 
     //---------------
-    light = xy::Component::create<xy::PointLight>(m_messageBus, 600.f, 500.f, sf::Color(255, 255, 100));
+    light = m_scene.createComponent<xy::PointLight>(m_messageBus, 600.f, 500.f, sf::Color(255, 255, 100));
     light->setDepth(300.f);
     light->setIntensity(2.5f);
     light->enableShadowCasting(true);
@@ -415,13 +411,13 @@ void PlatformDemoState::buildTerrain()
     m_textureResource.setFallbackColour({ 127, 127, 255 });
     const auto& normalTexture = m_textureResource.get("normalFallback");
 
-    auto background = xy::Component::create<Plat::Background>(m_messageBus, m_textureResource);
+    auto background = m_scene.createComponent<Plat::Background>(m_messageBus, m_textureResource);
     background->setAmbientColour(m_scene.getAmbientColour());
     auto entity = xy::Entity::create(m_messageBus);
     entity->addComponent(background);
     m_scene.addEntity(entity, xy::Scene::Layer::BackRear);
 
-    auto drawable = xy::Component::create<xy::AnimatedDrawable>(m_messageBus);
+    auto drawable = m_scene.createComponent<xy::AnimatedDrawable>(m_messageBus);
     drawable->setTexture(m_textureResource.get("assets/images/platform/left_edge.png"));
     drawable->setNormalMap(normalTexture);
     drawable->setShader(m_shaderResource.get(PlatformShaderId::SpecularSmooth2D));
@@ -431,7 +427,7 @@ void PlatformDemoState::buildTerrain()
 
     m_scene.addEntity(entity, xy::Scene::Layer::BackFront);
     //-------------------------
-    drawable = xy::Component::create<xy::AnimatedDrawable>(m_messageBus);
+    drawable = m_scene.createComponent<xy::AnimatedDrawable>(m_messageBus);
     drawable->setTexture(m_textureResource.get("assets/images/platform/ground_section.png"));
     drawable->setNormalMap(normalTexture);
     drawable->setShader(m_shaderResource.get(PlatformShaderId::SpecularSmooth2D));
@@ -442,7 +438,7 @@ void PlatformDemoState::buildTerrain()
 
     m_scene.addEntity(entity, xy::Scene::Layer::BackFront);
     //-------------------------
-    drawable = xy::Component::create<xy::AnimatedDrawable>(m_messageBus);
+    drawable = m_scene.createComponent<xy::AnimatedDrawable>(m_messageBus);
     drawable->setTexture(m_textureResource.get("assets/images/platform/ground_section.png"));
     drawable->setNormalMap(normalTexture);
     drawable->setShader(m_shaderResource.get(PlatformShaderId::SpecularSmooth2D));
@@ -453,7 +449,7 @@ void PlatformDemoState::buildTerrain()
 
     m_scene.addEntity(entity, xy::Scene::Layer::BackFront);
     //-------------------------
-    drawable = xy::Component::create<xy::AnimatedDrawable>(m_messageBus);
+    drawable = m_scene.createComponent<xy::AnimatedDrawable>(m_messageBus);
     drawable->setTexture(m_textureResource.get("assets/images/platform/ground_section.png"));
     drawable->setNormalMap(normalTexture);
     drawable->setShader(m_shaderResource.get(PlatformShaderId::SpecularSmooth2D));
@@ -464,7 +460,7 @@ void PlatformDemoState::buildTerrain()
 
     m_scene.addEntity(entity, xy::Scene::Layer::BackFront);
     //-------------------------
-    drawable = xy::Component::create<xy::AnimatedDrawable>(m_messageBus);
+    drawable = m_scene.createComponent<xy::AnimatedDrawable>(m_messageBus);
     drawable->setTexture(m_textureResource.get("assets/images/platform/right_edge.png"));
     drawable->setNormalMap(normalTexture);
     drawable->setShader(m_shaderResource.get(PlatformShaderId::SpecularSmooth2D));
@@ -487,7 +483,7 @@ void PlatformDemoState::buildTerrain()
 
     m_scene.addEntity(entity, xy::Scene::Layer::BackFront);
     //-------------------------
-    drawable = xy::Component::create<xy::AnimatedDrawable>(m_messageBus);
+    drawable = m_scene.createComponent<xy::AnimatedDrawable>(m_messageBus);
     drawable->setTexture(m_textureResource.get("assets/images/platform/plat_03.png"));
     drawable->setNormalMap(normalTexture);
     drawable->setShader(m_shaderResource.get(PlatformShaderId::SpecularSmooth2D));
@@ -498,7 +494,7 @@ void PlatformDemoState::buildTerrain()
 
     m_scene.addEntity(entity, xy::Scene::Layer::BackFront);
     //-------------------------
-    drawable = xy::Component::create<xy::AnimatedDrawable>(m_messageBus);
+    drawable = m_scene.createComponent<xy::AnimatedDrawable>(m_messageBus);
     drawable->setTexture(m_textureResource.get("assets/images/platform/plat_02.png"));
     drawable->setNormalMap(normalTexture);
     drawable->setShader(m_shaderResource.get(PlatformShaderId::SpecularSmooth2D));
@@ -542,7 +538,7 @@ void PlatformDemoState::buildTerrain()
 
 void PlatformDemoState::buildPhysics()
 {
-    auto groundBody = xy::Component::create<xy::Physics::RigidBody>(m_messageBus, xy::Physics::BodyType::Static);
+    auto groundBody = m_scene.createComponent<xy::Physics::RigidBody>(m_messageBus, xy::Physics::BodyType::Static);
     
     xy::Physics::CollisionRectangleShape rectShape({ 128.f, 1080.f });
     groundBody->addCollisionShape(rectShape);
@@ -605,7 +601,7 @@ void PlatformDemoState::addItems()
     std::function<void(const sf::Vector2f&)> createBox = 
         [this](const sf::Vector2f& position)
     {
-        auto body = xy::Component::create<xy::Physics::RigidBody>(m_messageBus, xy::Physics::BodyType::Dynamic);
+        auto body = m_scene.createComponent<xy::Physics::RigidBody>(m_messageBus, xy::Physics::BodyType::Dynamic);
         xy::Physics::CollisionRectangleShape cs({ 100.f, 100.f }, { -50.f, -50.f });
         cs.setDensity(11.f);
         cs.setFriction(0.7f);
@@ -626,7 +622,7 @@ void PlatformDemoState::addItems()
     std::function<void(const sf::Vector2f&)> createBall = 
         [this](const sf::Vector2f& position)
     {
-        auto body = xy::Component::create<xy::Physics::RigidBody>(m_messageBus, xy::Physics::BodyType::Dynamic);
+        auto body = m_scene.createComponent<xy::Physics::RigidBody>(m_messageBus, xy::Physics::BodyType::Dynamic);
         xy::Physics::CollisionCircleShape cs(34.f);
         cs.setDensity(4.f);
         cs.setFriction(0.2f);
@@ -654,7 +650,7 @@ void PlatformDemoState::addItems()
 
 void PlatformDemoState::addPlayer()
 {
-    auto body = xy::Component::create<xy::Physics::RigidBody>(m_messageBus, xy::Physics::BodyType::Dynamic);
+    auto body = m_scene.createComponent<xy::Physics::RigidBody>(m_messageBus, xy::Physics::BodyType::Dynamic);
     xy::Physics::CollisionRectangleShape cs({ 120.f, 240.f });
     cs.setFriction(0.6f);
     cs.setDensity(0.9f);
@@ -662,9 +658,9 @@ void PlatformDemoState::addPlayer()
     body->fixedRotation(true);
     body->addCollisionShape(cs);
 
-    auto controller = xy::Component::create<Plat::PlayerController>(m_messageBus);
+    auto controller = m_scene.createComponent<Plat::PlayerController>(m_messageBus);
 
-    auto camera = xy::Component::create<xy::Camera>(m_messageBus, getContext().defaultView);
+    auto camera = m_scene.createComponent<xy::Camera>(m_messageBus, getContext().defaultView);
     camera->lockTransform(xy::Camera::TransformLock::AxisY);
     camera->lockBounds({ 0.f,0.f, 2816.f, 1080.f });
 
@@ -684,7 +680,7 @@ void PlatformDemoState::addPlayer()
     m_scene.setActiveCamera(playerCamera);
     m_scene.addEntity(entity, xy::Scene::Layer::FrontMiddle);
 
-    body = xy::Component::create<xy::Physics::RigidBody>(m_messageBus, xy::Physics::BodyType::Dynamic);
+    body = m_scene.createComponent<xy::Physics::RigidBody>(m_messageBus, xy::Physics::BodyType::Dynamic);
     body->fixedRotation(true);
     cs.setRect({ 200.f, 300.f });
     body->addCollisionShape(cs);

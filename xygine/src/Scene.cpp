@@ -81,7 +81,7 @@ void Scene::update(float dt)
         for(const auto pl : lights)
         {
             const float rad = pl->getRadius();
-            auto qtc = xy::Component::create<QuadTreeComponent>(m_messageBus, sf::FloatRect({ -rad, -rad }, { rad * 2.f, rad * 2.f}));
+            auto qtc = m_componentAllocator.getComponent<QuadTreeComponent>(m_messageBus, sf::FloatRect({ -rad, -rad }, { rad * 2.f, rad * 2.f}));
             m_lightTree.add(p->addComponent(qtc));
         }
     };
@@ -349,11 +349,11 @@ void Scene::reset()
 
     //default sound / camera entity
     auto entity = Entity::create(m_messageBus);
-    auto al = Component::create<AudioListener>(m_messageBus);
+    auto al = m_componentAllocator.getComponent<AudioListener>(m_messageBus);
     entity->addComponent(al);
     entity->setPosition(DefaultSceneSize / 2.f);
 
-    auto camera = Component::create<Camera>(m_messageBus, sf::View(DefaultSceneSize / 2.f, DefaultSceneSize));
+    auto camera = m_componentAllocator.getComponent<Camera>(m_messageBus, sf::View(DefaultSceneSize / 2.f, DefaultSceneSize));
     m_defaultCamera = entity->addComponent(camera);
     m_layers[Layer::BackRear]->addChild(entity);
 

@@ -92,7 +92,7 @@ void SpriteBatch::entityUpdate(float)
 
 std::unique_ptr<Sprite, std::function<void(Sprite*)>> SpriteBatch::addSprite(xy::Scene& scene, xy::MessageBus& mb)
 {
-    auto sprite = xy::Component::create<Sprite>(scene.getComponentAllocator(), mb);
+    auto sprite = scene.createComponent<Sprite>(mb);
     m_sprites.push_back(sprite.get());
 
     //set the texture rect if a texture already set

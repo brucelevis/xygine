@@ -314,7 +314,7 @@ void DeferredDemoState::handleMessage(const xy::Message& msg)
 void DeferredDemoState::buildScene()
 {
     //use a special camera to render to the texture if it's not the default scene size
-    auto camera = xy::Component::create<xy::Camera>(m_messageBus, sf::View({}, { 960.f, 1080.f }));
+    auto camera = m_scene.createComponent<xy::Camera>(m_messageBus, sf::View({}, { 960.f, 1080.f }));
     auto entity = xy::Entity::create(m_messageBus);
     entity->setPosition(480.f, 540.f);
     
@@ -322,7 +322,7 @@ void DeferredDemoState::buildScene()
     m_scene.addEntity(entity, xy::Scene::Layer::FrontFront);
     
     //moving light
-    auto light = xy::Component::create<xy::PointLight>(m_messageBus, 500.f, 250.f);
+    auto light = m_scene.createComponent<xy::PointLight>(m_messageBus, 500.f, 250.f);
     light->setDepth(110.f);
     light->setDiffuseColour({ 255u, 185u, 135u });
     light->setIntensity(1.1f);
@@ -332,7 +332,7 @@ void DeferredDemoState::buildScene()
     entity->setPosition(120.f, 100.f);
 
     auto rotatingEntity = xy::Entity::create(m_messageBus);
-    auto rotator = xy::Component::create<RotationComponent>(m_messageBus);
+    auto rotator = m_scene.createComponent<RotationComponent>(m_messageBus);
     rotatingEntity->addComponent(rotator);
     rotatingEntity->addChild(entity);
     rotatingEntity->setPosition(480.f, 540.f);
@@ -341,7 +341,7 @@ void DeferredDemoState::buildScene()
 
     //so we have flat colours behind the scene
     m_textureResource.setFallbackColour({ 100u, 100u, 100u });
-    auto background = xy::Component::create<xy::AnimatedDrawable>(m_messageBus, m_textureResource.get("fallback_grey"));
+    auto background = m_scene.createComponent<xy::AnimatedDrawable>(m_messageBus, m_textureResource.get("fallback_grey"));
     background->setScale(50.f, 80.f);
     m_textureResource.setFallbackColour({ 127, 127, 255 });
     background->setNormalMap(m_textureResource.get("fallback_normal"));
@@ -355,7 +355,7 @@ void DeferredDemoState::buildScene()
 
 
     //add a sprite to draw
-    auto doofer = xy::Component::create<xy::AnimatedDrawable>(m_messageBus, m_textureResource.get("assets/images/deferred/run_diffuse.png"));
+    auto doofer = m_scene.createComponent<xy::AnimatedDrawable>(m_messageBus, m_textureResource.get("assets/images/deferred/run_diffuse.png"));
     doofer->loadAnimationData("assets/images/deferred/run.xya");
     doofer->playAnimation(0);
     doofer->setShader(m_deferredShader);
@@ -368,7 +368,7 @@ void DeferredDemoState::buildScene()
 
     m_scene.addEntity(entity, xy::Scene::Layer::FrontMiddle);
 
-    doofer = xy::Component::create<xy::AnimatedDrawable>(m_messageBus, m_textureResource.get("assets/images/deferred/run_diffuse.png"));
+    doofer = m_scene.createComponent<xy::AnimatedDrawable>(m_messageBus, m_textureResource.get("assets/images/deferred/run_diffuse.png"));
     doofer->loadAnimationData("assets/images/deferred/run.xya");
     doofer->playAnimation(0);
     doofer->setShader(m_deferredShader);

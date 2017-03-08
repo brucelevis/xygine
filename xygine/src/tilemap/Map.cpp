@@ -362,7 +362,7 @@ std::unique_ptr<TileMapLayer, std::function<void(TileMapLayer*)>> Map::getDrawab
     while (chunkSize.y % tileSize.y != 0) { chunkSize.y--; }
     LOG("Set chunk size to " + std::to_string(chunkSize.x), Logger::Type::Info);
 
-    auto tml = xy::Component::create<TileMapLayer>(scene.getComponentAllocator(), mb, Key(), chunkSize);
+    auto tml = scene.createComponent<TileMapLayer>(mb, Key(), chunkSize);
     if (layer.getType() == tmx::Layer::Type::Tile)
     {       
         tml->setTileData(dynamic_cast<const TileLayer*>(&layer), m_tilesets, *this, tr, sr);
@@ -387,7 +387,7 @@ std::unique_ptr<Physics::RigidBody, std::function<void(Physics::RigidBody*)>> Ma
 
 std::unique_ptr<Physics::RigidBody, std::function<void(Physics::RigidBody*)>> Map::createRigidBody(xy::Scene& scene, xy::MessageBus& mb, const ObjectGroup& og, Physics::BodyType bodyType)
 {
-    auto rb = xy::Component::create<xy::Physics::RigidBody>(scene.getComponentAllocator(), mb, bodyType);
+    auto rb = scene.createComponent<xy::Physics::RigidBody>(mb, bodyType);
     for (const auto& o : og.getObjects())
     {
         processObject(rb.get(), o);
@@ -398,7 +398,7 @@ std::unique_ptr<Physics::RigidBody, std::function<void(Physics::RigidBody*)>> Ma
 
 std::unique_ptr<Physics::RigidBody, std::function<void(Physics::RigidBody*)>> Map::createRigidBody(xy::Scene& scene, xy::MessageBus& mb, const Object& object, Physics::BodyType bodyType)
 {
-    auto rb = xy::Component::create<xy::Physics::RigidBody>(scene.getComponentAllocator(), mb, bodyType);    
+    auto rb = scene.createComponent<xy::Physics::RigidBody>(mb, bodyType);    
     processObject(rb.get(), object);
     
     return std::move(rb);

@@ -628,7 +628,7 @@ void ParticleSystem::Definition::loadFromFile(const std::string& path, TextureRe
 
 std::unique_ptr<ParticleSystem, std::function<void(ParticleSystem*)>> ParticleSystem::Definition::createSystem(Scene& scene, MessageBus& mb) const
 {
-    auto ps = Component::create<ParticleSystem>(scene.getComponentAllocator(), mb);
+    auto ps = scene.createComponent<ParticleSystem>(mb);
 
     if (texture) ps->setTexture(*texture);
     ps->setColour(colour);

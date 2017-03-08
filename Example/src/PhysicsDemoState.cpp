@@ -268,7 +268,7 @@ void PhysicsDemoState::createBodies()
 {
     auto tableEntity = xy::Entity::create(m_messageBus);
     tableEntity->setWorldPosition({ 360.f, 211.f });
-    auto tableBody = xy::Component::create<xy::Physics::RigidBody>(m_messageBus, xy::Physics::BodyType::Static);
+    auto tableBody = m_scene.createComponent<xy::Physics::RigidBody>(m_messageBus, xy::Physics::BodyType::Static);
 
     //cushions
     std::vector<sf::Vector2f> points = 
@@ -410,7 +410,7 @@ void PhysicsDemoState::createBodies()
     tableEntity->addComponent(tableBody);
 
     //image
-    auto drawable = xy::Component::create<xy::AnimatedDrawable>(m_messageBus);
+    auto drawable = m_scene.createComponent<xy::AnimatedDrawable>(m_messageBus);
     drawable->setTexture(m_textureResource.get("assets/images/physics demo/table.png"));
     drawable->setNormalMap(m_textureResource.get("assets/images/physics demo/table_normal.png"));
     drawable->setShader(m_shaderResource.get(PhysicsShaderId::NormalMapTextured));
@@ -427,11 +427,11 @@ void PhysicsDemoState::createBodies()
     auto ls = std::make_unique<PhysDemo::LineDrawable>(m_messageBus);
     cbEntity->addComponent(ls);
     cbEntity->getComponent<xy::AnimatedDrawable>()->setColour(sf::Color::White);
-    auto as = xy::Component::create<xy::AudioSource>(m_messageBus, m_soundResource);
+    auto as = m_scene.createComponent<xy::AudioSource>(m_messageBus, m_soundResource);
     as->setSound("assets/sound/cuetip.wav");
     as->setName("tip_sound");
     cbEntity->addComponent(as);
-    //auto light = xy::Component::create<xy::PointLight>(m_messageBus, 200.f, 16.f, sf::Color::Blue);
+    //auto light = m_scene.createComponent<xy::PointLight>(m_messageBus, 200.f, 16.f, sf::Color::Blue);
     //light->setDepth(70.f);
     //cbEntity->addComponent(light);
 
@@ -454,7 +454,7 @@ void PhysicsDemoState::createBodies()
 
 void PhysicsDemoState::addLights()
 {
-    auto light = xy::Component::create<xy::PointLight>(m_messageBus, 1200.f, 220.f/*, sf::Color::Blue*/);
+    auto light = m_scene.createComponent<xy::PointLight>(m_messageBus, 1200.f, 220.f/*, sf::Color::Blue*/);
     light->setDepth(600.f);
     //light->setIntensity(1.5f);
 
@@ -532,7 +532,7 @@ xy::Physics::RigidBody* PhysicsDemoState::addBall(const sf::Vector2f& position)
 {   
     auto ballEntity = xy::Entity::create(m_messageBus);
     ballEntity->setWorldPosition(position);
-    auto ballBody = xy::Component::create<xy::Physics::RigidBody>(m_messageBus, xy::Physics::BodyType::Dynamic);
+    auto ballBody = m_scene.createComponent<xy::Physics::RigidBody>(m_messageBus, xy::Physics::BodyType::Dynamic);
     ballBody->setAngularDamping(0.6f);
     ballBody->setLinearDamping(0.75f);
     ballBody->isBullet(true);
@@ -546,7 +546,7 @@ xy::Physics::RigidBody* PhysicsDemoState::addBall(const sf::Vector2f& position)
     auto b = ballEntity->addComponent(ballBody);
 
     //ball / ball sound
-    auto soundSource = xy::Component::create<xy::AudioSource>(m_messageBus, m_soundResource);
+    auto soundSource = m_scene.createComponent<xy::AudioSource>(m_messageBus, m_soundResource);
     soundSource->setSound("assets/sound/ball.wav");
     xy::Component::MessageHandler ballImpactHandler;
     ballImpactHandler.action = std::bind(ballImpactAction, std::placeholders::_1, std::placeholders::_2);
@@ -555,13 +555,13 @@ xy::Physics::RigidBody* PhysicsDemoState::addBall(const sf::Vector2f& position)
     ballEntity->addComponent(soundSource);
 
     //ball / cushion sound
-    soundSource = xy::Component::create<xy::AudioSource>(m_messageBus, m_soundResource);
+    soundSource = m_scene.createComponent<xy::AudioSource>(m_messageBus, m_soundResource);
     soundSource->setSound("assets/sound/cushion.wav");
     ballImpactHandler.action = std::bind(cushionImpactAction, std::placeholders::_1, std::placeholders::_2);
     soundSource->addMessageHandler(ballImpactHandler);
     ballEntity->addComponent(soundSource);
 
-    auto drawable = xy::Component::create<xy::AnimatedDrawable>(m_messageBus);
+    auto drawable = m_scene.createComponent<xy::AnimatedDrawable>(m_messageBus);
     drawable->setColour(sf::Color::Blue);
     drawable->setTexture(m_textureResource.get("assets/images/physics demo/ball.png"));
     drawable->setNormalMap(m_textureResource.get("assets/images/physics demo/ball_normal.png"));

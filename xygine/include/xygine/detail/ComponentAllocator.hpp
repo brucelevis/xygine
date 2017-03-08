@@ -55,15 +55,15 @@ namespace xy
             }
 
             template <typename T, typename... Args>
-            std::unique_ptr<T, std::function<void(T*)>> getComponent(Args... args)
+            std::unique_ptr<T, std::function<void(T*)>> getComponent(Args&&... args)
             {
-                static_assert(std::is_base_of<Component, T>::vale, "Must be a component type");
+                static_assert(std::is_base_of<Component, T>::value, "Must be a component type");
                 std::type_index idx(typeid(T));
                 if (m_sources.count(idx) == 0)
                 {
                     m_sources.insert(std::make_pair(idx, std::make_unique<ComponentSource<T>>()));
                 }
-                return std::move(dynamic_cast<T*>(m_sources[idx].get())->create(std::forward<Args>(args)...));
+                return std::move(dynamic_cast<ComponentSource<T>*>(m_sources[idx].get())->create(std::forward<Args>(args)...));
             }
 
         private:

@@ -268,7 +268,7 @@ void ParticleDemoState::handleMessage(const xy::Message& msg)
 //private
 void ParticleDemoState::setupParticles()
 {
-    auto particleController = xy::Component::create<xy::ParticleController>(m_messageBus);
+    auto particleController = m_scene.createComponent<xy::ParticleController>(m_messageBus);
     auto entity = xy::Entity::create(m_messageBus);
     
     m_particleDef.loadFromFile("assets/particles/explosion.xyp", m_textureResource);
@@ -306,7 +306,7 @@ void ParticleDemoState::buildTerrain()
 {
     auto ent = xy::Entity::create(m_messageBus);
 
-    /*auto ad = xy::Component::create<xy::AnimatedDrawable>(m_messageBus);
+    /*auto ad = m_scene.createComponent<xy::AnimatedDrawable>(m_messageBus);
     ad->setTexture(m_textureResource.get("assets/images/cave/background.png"));
     ad->setNormalMap(m_textureResource.get("assets/images/cave/background_normal.png"));
     ad->setShader(m_shaderResource.get(ParticleShaderId::NormalMapTexturedSpecular));
@@ -325,7 +325,7 @@ void ParticleDemoState::buildTerrain()
     //get edges to add to physworld
     const auto& edges = cave->getEdges();
     REPORT("edge count", std::to_string(edges.size()));
-    auto rb = xy::Component::create<xy::Physics::RigidBody>(m_messageBus, xy::Physics::BodyType::Static);
+    auto rb = m_scene.createComponent<xy::Physics::RigidBody>(m_messageBus, xy::Physics::BodyType::Static);
     for (const auto& e : edges)
     {
         xy::Physics::CollisionEdgeShape es(e);
@@ -338,19 +338,19 @@ void ParticleDemoState::buildTerrain()
 
 void ParticleDemoState::spawnThing(const sf::Vector2f& position)
 {
-    auto ps = m_particleDef.createSystem(m_messageBus);
+    auto ps = m_particleDef.createSystem(m_scene, m_messageBus);
     ps->setLifetimeVariance(0.5f);
     ps->start(m_particleDef.releaseCount, m_particleDef.delay, m_particleDef.duration);
 
-    auto physBody = xy::Component::create<xy::Physics::RigidBody>(m_messageBus, xy::Physics::BodyType::Dynamic);
+    auto physBody = m_scene.createComponent<xy::Physics::RigidBody>(m_messageBus, xy::Physics::BodyType::Dynamic);
     xy::Physics::CollisionCircleShape cs(10.f);
     cs.setRestitution(0.99f);
     cs.setDensity(20.f);
     physBody->addCollisionShape(cs);
 
-    auto td = xy::Component::create<TimedDestruction>(m_messageBus);
+    auto td = m_scene.createComponent<TimedDestruction>(m_messageBus);
 
-    auto dwbl = xy::Component::create<xy::AnimatedDrawable>(m_messageBus);
+    auto dwbl = m_scene.createComponent<xy::AnimatedDrawable>(m_messageBus);
     dwbl->setTexture(m_textureResource.get("assets/images/physics demo/ball.png"));
     //dwbl->setNormalMap(m_textureResource.get("assets/images/physics demo/ball_normal.png"));
     //dwbl->setShader(m_shaderResource.get(ParticleShaderId::NormalMapTexturedSpecular));
@@ -358,7 +358,7 @@ void ParticleDemoState::spawnThing(const sf::Vector2f& position)
     dwbl->setOrigin({ size.x / 2.f, size.y / 2.f });
     dwbl->setColour({ 198u, 200u, 250u });
 
-    auto light = xy::Component::create<xy::PointLight>(m_messageBus, 100.f, size.x / 2.f, sf::Color(198u, 200u, 250u), sf::Color(128u, 128u, 255u));
+    auto light = m_scene.createComponent<xy::PointLight>(m_messageBus, 100.f, size.x / 2.f, sf::Color(198u, 200u, 250u), sf::Color(128u, 128u, 255u));
     light->setDepth(300.f);
     light->setRange(750.f);
     //light->setIntensity(0.9f);

@@ -81,7 +81,7 @@ namespace xy
         \param Scene An instance of the scene containing the model components
         which belong to this MeshRenderer
         */
-        MeshRenderer(const sf::Vector2u&, const Scene&);
+        MeshRenderer(const sf::Vector2u&, Scene&);
         ~MeshRenderer();
 
         /*!
@@ -103,14 +103,14 @@ namespace xy
         \param MessageBus Reference to the actuve message bus.
         \returns Model component if successful, else nullptr (for example an invalid ID was provided)
         */
-        std::unique_ptr<Model> createModel(std::int32_t, MessageBus&);
+        std::unique_ptr<Model, std::function<void(Model*)>> createModel(std::int32_t, MessageBus&);
 
         /*!
         \brief Factory function for creating Model components.
         Model components require registration with the MeshRenderer
         so the only valid way to create them is via this function (or one of its overloads).
         */
-        std::unique_ptr<Model> createModel(const Mesh&, MessageBus&);
+        std::unique_ptr<Model, std::function<void(Model*)>> createModel(const Mesh&, MessageBus&);
 
         /*!
         \brief Factory function to create drawable components of the MeshRenderer.
@@ -119,7 +119,7 @@ namespace xy
         reasons that there usually be no more than one of these per MeshRenderer.
         \see MeshDrawable
         */
-        std::unique_ptr<MeshDrawable> createDrawable(MessageBus&);
+        std::unique_ptr<MeshDrawable, std::function<void(MeshDrawable*)>> createDrawable(MessageBus&);
 
         /*!
         \brief Updates the MeshRenderer with the current scene status.
@@ -234,7 +234,7 @@ namespace xy
         };
         std::map<std::int32_t, AnimationData> m_animationResource;
 
-        const Scene& m_scene;
+        Scene& m_scene;
         glm::mat4 m_viewMatrix;
         glm::mat4 m_projectionMatrix;
         glm::mat4 m_flippedProjectionMatrix;

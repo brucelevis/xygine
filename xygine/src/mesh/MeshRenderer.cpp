@@ -88,7 +88,7 @@ namespace
     }
 }
 
-MeshRenderer::MeshRenderer(const sf::Vector2u& size, const Scene& scene)
+MeshRenderer::MeshRenderer(const sf::Vector2u& size, Scene& scene)
     : m_scene               (scene),
     m_matrixBlockBuffer     ("u_matrixBlock"),
     m_lightingBlockBuffer   ("u_lightBlock"),
@@ -203,7 +203,7 @@ void MeshRenderer::loadModel(std::int32_t id, ModelBuilder& mb)
     }
 }
 
-std::unique_ptr<Model> MeshRenderer::createModel(std::int32_t id, MessageBus&mb)
+std::unique_ptr<Model, std::function<void(Model*)>> MeshRenderer::createModel(std::int32_t id, MessageBus&mb)
 {
     auto& mesh = m_meshResource.get(id);
     auto model = createModel(mesh, mb);
@@ -222,9 +222,9 @@ std::unique_ptr<Model> MeshRenderer::createModel(std::int32_t id, MessageBus&mb)
     return std::move(model);
 }
 
-std::unique_ptr<Model> MeshRenderer::createModel(const Mesh& mesh, MessageBus& mb)
+std::unique_ptr<Model, std::function<void(Model*)>> MeshRenderer::createModel(const Mesh& mesh, MessageBus& mb)
 {
-    auto model = Component::create<Model>(mb, mesh, Lock());
+    auto model = m_scene.createComponent<Model>(mb, mesh, Lock());
     m_models.push_back(model.get());
 
     //set default material
@@ -234,9 +234,9 @@ std::unique_ptr<Model> MeshRenderer::createModel(const Mesh& mesh, MessageBus& m
     return std::move(model);
 }
 
-std::unique_ptr<MeshDrawable> MeshRenderer::createDrawable(MessageBus& mb)
+std::unique_ptr<MeshDrawable, std::function<void(MeshDrawable*)>> MeshRenderer::createDrawable(MessageBus& mb)
 {
-    auto md = xy::Component::create<MeshDrawable>(mb, *this, Lock());
+    auto md = m_scene.createComponent<MeshDrawable>(mb, *this, Lock());
     return std::move(md);
 }
 

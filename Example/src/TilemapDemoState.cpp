@@ -236,12 +236,12 @@ void TilemapDemoState::buildScene()
             if (l->getType() == xy::tmx::Layer::Type::Object)
             {
                 xy::Logger::log("found object layer - attempting to create physics components", xy::Logger::Type::Info);
-                auto rb = m_tilemap.createRigidBody(m_messageBus, *l);
+                auto rb = m_tilemap.createRigidBody(m_scene, m_messageBus, *l);
                 entity->addComponent(rb);
             }
             else
             {
-                auto drawable = m_tilemap.getDrawable(m_messageBus, *l, m_textureResource, m_shaderResource);
+                auto drawable = m_tilemap.getDrawable(m_scene, m_messageBus, *l, m_textureResource, m_shaderResource);
                 if (drawable)
                 {
                     xy::Logger::log("created layer drawable, adding to scene...");
@@ -253,19 +253,19 @@ void TilemapDemoState::buildScene()
 
         static const float radius = 30.f;
 
-        auto body = xy::Component::create<xy::Physics::RigidBody>(m_messageBus, xy::Physics::BodyType::Dynamic);
+        auto body = m_scene.createComponent<xy::Physics::RigidBody>(m_messageBus, xy::Physics::BodyType::Dynamic);
         auto cs = xy::Physics::CollisionCircleShape(radius);
         cs.setDensity(0.9f);
         cs.setRestitution(1.f);
         body->addCollisionShape(cs);
 
-        auto drawable = xy::Component::create<xy::SfDrawableComponent<sf::CircleShape>>(m_messageBus);
+        auto drawable = m_scene.createComponent<xy::SfDrawableComponent<sf::CircleShape>>(m_messageBus);
         drawable->getDrawable().setRadius(radius);
         drawable->getDrawable().setOrigin({ radius, radius });
         drawable->getDrawable().setFillColor({ 255, 255, 255, 200 });
         drawable->getDrawable().setOutlineThickness(2.f);
 
-        auto cam = xy::Component::create<xy::Camera>(m_messageBus, getContext().defaultView);
+        auto cam = m_scene.createComponent<xy::Camera>(m_messageBus, getContext().defaultView);
         cam->lockTransform(xy::Camera::TransformLock::Rotation, true);
         cam->lockBounds(m_tilemap.getBounds());
         

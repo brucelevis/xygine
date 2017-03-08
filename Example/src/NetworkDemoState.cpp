@@ -401,7 +401,7 @@ void NetworkDemoState::spawnBall(sf::Uint64 id, sf::Vector2f position, sf::Vecto
 {
     if (std::find(m_spawnedIDs.begin(), m_spawnedIDs.end(), id) != m_spawnedIDs.end()) return;
 
-    auto shape = xy::Component::create<xy::SfDrawableComponent<sf::RectangleShape>>(m_messageBus);
+    auto shape = m_scene.createComponent<xy::SfDrawableComponent<sf::RectangleShape>>(m_messageBus);
     shape->getDrawable().setSize({ 20.f, 20.f });
     shape->getDrawable().setOrigin({ 10.f, 10.f });
 
@@ -410,7 +410,7 @@ void NetworkDemoState::spawnBall(sf::Uint64 id, sf::Vector2f position, sf::Vecto
     ent->setUID(id);
     ent->addComponent(shape);
 
-    auto controller = xy::Component::create<BallLogic>(m_messageBus);
+    auto controller = m_scene.createComponent<BallLogic>(m_messageBus);
     controller->setCollisionObjects(m_collisionWorld.getEntities());
     controller->setVelocity(velocity);
     ent->addComponent(controller);
@@ -426,11 +426,11 @@ void NetworkDemoState::spawnPlayer(xy::ClientID clid, sf::Uint64 entid, sf::Vect
     if (clid == m_connection.getClientID())
     {
         //spawn a local player
-        auto drawable = xy::Component::create<xy::SfDrawableComponent<sf::RectangleShape>>(m_messageBus);
+        auto drawable = m_scene.createComponent<xy::SfDrawableComponent<sf::RectangleShape>>(m_messageBus);
         drawable->getDrawable().setSize(paddleSize);
         drawable->getDrawable().setOrigin(paddleSize / 2.f);
 
-        auto controller = xy::Component::create<PlayerController>(m_messageBus);
+        auto controller = m_scene.createComponent<PlayerController>(m_messageBus);
 
         auto entity = xy::Entity::create(m_messageBus);
         entity->setUID(entid);
@@ -447,11 +447,11 @@ void NetworkDemoState::spawnPlayer(xy::ClientID clid, sf::Uint64 entid, sf::Vect
     else
     {
         //spawn remote player
-        auto drawable = xy::Component::create<xy::SfDrawableComponent<sf::RectangleShape>>(m_messageBus);
+        auto drawable = m_scene.createComponent<xy::SfDrawableComponent<sf::RectangleShape>>(m_messageBus);
         drawable->getDrawable().setSize(paddleSize);
         drawable->getDrawable().setOrigin(paddleSize / 2.f);
 
-        auto controller = xy::Component::create<NetworkController>(m_messageBus);
+        auto controller = m_scene.createComponent<NetworkController>(m_messageBus);
 
         auto entity = xy::Entity::create(m_messageBus);
         entity->setUID(entid);

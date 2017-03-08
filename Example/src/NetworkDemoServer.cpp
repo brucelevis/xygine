@@ -304,11 +304,11 @@ void Server::spawnBall()
     auto ballEntity = xy::Entity::create(m_messageBus);
     ballEntity->setPosition(spawnPos);
     
-    auto ballLogic = xy::Component::create<BallLogic>(m_messageBus);
+    auto ballLogic = m_scene.createComponent<BallLogic>(m_messageBus);
     ballLogic->setCollisionObjects(m_collisionWorld.getEntities());
     auto logic = ballEntity->addComponent(ballLogic);
 
-    auto drawable = xy::Component::create<xy::SfDrawableComponent<sf::RectangleShape>>(m_messageBus);
+    auto drawable = m_scene.createComponent<xy::SfDrawableComponent<sf::RectangleShape>>(m_messageBus);
     drawable->getDrawable().setSize(ballSize);
     drawable->getDrawable().setOrigin(ballSize / 2.f);
     drawable->getDrawable().setFillColor(sf::Color::Cyan);
@@ -345,10 +345,10 @@ sf::Uint64 Server::spawnPlayer(Player& player)
     playerEntity->setPosition(position);
     player.entID = playerEntity->getUID();
     
-    auto playerController = xy::Component::create<PlayerController>(m_messageBus);
+    auto playerController = m_scene.createComponent<PlayerController>(m_messageBus);
     playerEntity->addComponent(playerController);
 
-    auto drawable = xy::Component::create<xy::SfDrawableComponent<sf::RectangleShape>>(m_messageBus);
+    auto drawable = m_scene.createComponent<xy::SfDrawableComponent<sf::RectangleShape>>(m_messageBus);
     drawable->getDrawable().setSize(paddleSize);
     drawable->getDrawable().setOrigin(paddleSize / 2.f);
     drawable->getDrawable().setFillColor(sf::Color::Cyan);
